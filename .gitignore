@@ -1,0 +1,33 @@
+# ==========================================
+# Manim Specifics
+# ==========================================
+# Ignore all rendered media output (videos, images, audio)
+media/
+videos/
+images/
+
+# Ignore local configuration overrides
+manim.cfg
+
+# Ignore layout saved files (if using modern manim features)
+active_layout.json
+
+# ==========================================
+# Python Build and Cache
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.venv/
+venv/
+ENV/
+env/
+
+# ==========================================
+# IDEs and OS Specific Files
+# ==========================================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
