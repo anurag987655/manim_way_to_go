@@ -1,5 +1,5 @@
 # Videos objective : to make learner familiar with discrete and continuous time singal. How discrete time signal exists in integer space and reveal a basic difference between them.
-
+import numpy as np 
 from manim import *
 
 class Continuous(Scene):
@@ -114,3 +114,104 @@ class Continuous(Scene):
 
             self.play(FadeOut(dot),FadeIn(new_dot),run_time=1)
             dot=new_dot
+
+        self.clear()
+        text4=Text("what about signals in discrete and continuous time?", font="Times New Roman", color=BLUE_C)
+        self.play(Write(text4))
+
+        self.play(FadeOut(text4))
+        
+        # Creating a axes for plotting continuous time sine wave
+
+        text5=Text("Continuous time signal", font="Times New Roman", color= BLUE_C)
+        self.play(Write(text5))
+        self.wait(1)
+
+
+        self.play(text5.animate.to_edge(UP))
+        self.wait(1)
+
+        # defining sine animation for the continuous singal: 
+
+        axes = Axes(x_range=[0,9,1],y_range=[-2,2,1],x_length=10,y_length=5,tips=True)
+
+        graph = axes.plot(lambda t : np.sin(t),x_range=[0,8],color=YELLOW)
+
+
+        axes.x_axis.get_tip().scale(0.5)
+        axes.y_axis.get_tip().scale(0.5)
+
+        x_labels= axes.get_x_axis().add_numbers([0,1,2,3,4,5,6,7,8])
+        y_labels = axes.get_y_axis().add_numbers([-1,0,1])
+
+        self.play(Create(axes))
+        self.wait(2)
+        ## creating a label 
+        t_label = MathTex(r"t")
+        x_label = MathTex(r"x(t)")
+
+        t_label.next_to(axes.x_axis.get_end(),DOWN)
+        x_label.next_to(axes.y_axis.get_end(),UP)
+
+        self.play(Write(t_label),Write(x_label))
+
+        self.play(Create(graph),run_time=3)
+
+        self.wait(1)
+
+        self.clear()
+
+        text6=Text("Discrete time signal", font = "Times New Roman", color= BLUE_C)
+
+        self.play(Write(text6), run_time=3)
+        
+        self.play(text6.animate.to_edge(UP))
+        self.wait(1)
+
+
+        d_axis = Axes(x_range=[0,9,1],y_range=[-2,2,1],x_length=10,y_length=5,tips=True)
+
+        d_axis.x_axis.get_tip().scale(0.5)
+        d_axis.y_axis.get_tip().scale(0.5)
+
+        x_labels= d_axis.get_x_axis().add_numbers([0,1,2,3,4,5,6,7,8])
+        y_labels = d_axis.get_y_axis().add_numbers([-1,0,1])
+
+        n_label= MathTex(r"n")
+        x_label=MathTex(r"x[n]")
+
+        n_label.next_to(d_axis.x_axis.get_end(), DOWN)
+        x_label.next_to(d_axis.y_axis.get_end(), UP)
+
+
+        self.play(Create(d_axis))
+
+        self.play(Write(n_label),Write(x_label))
+
+        n_values= np.arange(0,9,1)
+        y_values= np.sin(n_values)
+
+
+        ball = Dot(d_axis.c2p(0,0),color=YELLOW, radius=0.1)
+        self.add(ball)
+
+        stems = VGroup()
+        dots = VGroup()
+
+        for n,y in zip(n_values,y_values):
+            target_top = d_axis.c2p(n,y)
+            target_bottom= d_axis.c2p(n,0)
+
+            self.play(ball.animate.move_to(d_axis.c2p(n,0)),run_time=0.3)
+
+            stem = Line(target_bottom,target_top,color=BLUE)
+
+            self.play(Create(stem),run_time=0.3)
+
+            self.play(ball.animate.move_to(target_top),run_time=0.3)
+
+            dot = Dot(target_top,color=YELLOW)
+            self.add(dot)
+            
+            stems.add(stem)
+            dots.add(dot)
