@@ -33,19 +33,24 @@ class Shift(Scene):
 
         self.wait(1)
 
-        ## Creating first scene for defining the input shift: 
-        label2= create_formula_label("x(t+2)",UR)
-        self.play(Write(label2))
-
-       
+        labels_data = [
+            {"text": r"t=-3,\ x(-3+2)=x(-1)", "point": (-3, 0)},
+            {"text": r"t=-2,\ x(-2+2)=x(0)",  "point": (-2, 1)},
+            {"text": r"t=-1,\ x(-1+2)=x(1)",  "point": (-1, 1)},
+            {"text": r"t=0,\ x(0+2)=x(2)",    "point": (0, 0)},
+        ]
         
-        tex4=MathTex(r"t=-3, x(-3+2)=x(-1)",color=GOLD).scale(0.7).next_to(label2,DOWN,aligned_edge=RIGHT)
-        tex3=MathTex(r"t=-2, x(-2+2)=x(0)",color=GOLD).scale(0.7).next_to(tex4,DOWN,aligned_edge=LEFT)
-        tex2=MathTex(r"t=0, x(0+2)=x(2)",color=GOLD).scale(0.7).next_to(tex3,DOWN,aligned_edge=LEFT)
-        tex1=MathTex(r"t=-1, x(-1+2)=x(1)",color=GOLD).scale(0.7).next_to(tex2,DOWN,aligned_edge=LEFT)
+        group = create_shift_animation(
+            scene=self,
+            axes=axes,
+            formula="x(t+2)",
+            labels_data=labels_data,
+            corner=UR,
+            dot_color=RED,
+            dot_radius=0.08,
+            dot_run_time=1.2,
+            label_scale=0.7,
+            label_color=GOLD
+        )
         
-
-        self.play(Write(tex4))
-        self.play(Write(tex3))
-        self.play(Write(tex2))
-        self.play(Write(tex1))
+        self.wait(2)

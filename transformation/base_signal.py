@@ -62,3 +62,76 @@ def build_custom_signal(axes):
     ramp_down = axes.plot(lambda t: 2 - t, x_range=[1, 2], color=GREEN_C)
     zero2 = axes.plot(lambda t: 0, x_range=[2, 3], color=GREEN_C)
     return VGroup(zero1, ramp_up, flat, ramp_down, zero2)
+
+
+
+def create_shift_animation(scene, axes, formula, labels_data, corner=UR,
+                           dot_color=RED, dot_radius=0.08, dot_run_time=1.0,
+                           label_scale=0.7, label_color=GOLD):
+    """
+    Create a formula at the specified corner, then stack labels below it,
+    and animate red dots from the left side of each label to its corresponding point on the axes.
+
+    Parameters
+    ----------
+    scene : Scene
+        The Manim scene.
+    axes : Axes
+        The coordinate system.
+    formula : str
+        LaTeX string for the formula (e.g. "x(t+2)").
+    labels_data : list of dict
+        Each dict: {"text": str, "point": (t, x)}.
+        The order of the list defines the vertical stack (top to bottom).
+    corner : str or list, default=UR
+        Where to place the formula.
+    dot_color : str, default=RED
+        Color of the flying dots.
+    dot_radius : float, default=0.08
+        Radius of each dot.
+    dot_run_time : float, default=1.0
+        Duration of the dot's flight.
+    label_scale : float, default=0.7
+        Scale of the stacked labels.
+    label_color : str, default=GOLD
+        Color of the labels.
+
+    Returns
+    -------
+    VGroup
+        The formula and all stacked labels (useful for later removal).
+    """
+    # Create formula label
+    formula_label = MathTex(formula, color=BLUE).scale(0.9).to_corner(corner)
+    scene.play(Write(formula_label))
+    
+    # Build stacked labels
+    labels_vgroup = VGroup()
+    prev_label = formula_label
+    first = True
+    
+    for data in labels_data:
+        label = MathTex(data["text"], color=label_color).scale(label_scale)
+        # Alignment: first label below formula aligned RIGHT, others LEFT
+        if first:
+            label.next_to(prev_label, DOWN, aligned_edge=RIGHT, buff=0.15)
+            first = False
+        else:
+            label.next_to(prev_label, DOWN, aligned_edge=LEFT, buff=0.15)
+        scene.play(Write(label))
+        labels_vgroup.add(label)
+        prev_label = label
+    
+    # Now animate dots from left side of each label to axes point
+    for label, data in zip(labels_vgroup, labels_data):
+        # Get left side of the label (a bit to the left for clarity)
+        start_point = label.get_left() + LEFT * 0.2
+        # Target point on axes
+        t, x = data["point"]
+        target_point = axes.c2p(t, x)
+        
+        dot = Dot(start_point, color=dot_color, radius=dot_radius)
+        scene.add(dot)
+        scene.play(dot.animate.move_to(target_point), run_time=dot_run_time, rate_func=rate_functions.ease_out_sine)
+    
+    return VGroup(formula_label, labels_vgroup)
