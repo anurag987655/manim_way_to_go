@@ -63,6 +63,29 @@ def build_custom_signal(axes):
     zero2 = axes.plot(lambda t: 0, x_range=[2, 3], color=GREEN_C)
     return VGroup(zero1, ramp_up, flat, ramp_down, zero2)
 
+def build_shifted_signal(axes, shift=2):
+    """
+    Build the signal x(t + shift) for shift=2.
+    Original signal x(t) is defined as:
+        0       for -3 <= t <= -1
+        t+1     for -1 <= t <= 0
+        1       for 0 <= t <= 1
+        2-t     for 1 <= t <= 2
+        0       for 2 <= t <= 3
+    Then x(t+2) is:
+        0       for -5 <= t <= -3
+        (t+2)+1 = t+3  for -3 <= t <= -2
+        1       for -2 <= t <= -1
+        2-(t+2) = -t   for -1 <= t <= 0
+        0       for 0 <= t <= 1
+    """
+    zero1 = axes.plot(lambda t: 0, x_range=[-5, -3], color=GREEN_C)
+    ramp_up = axes.plot(lambda t: t + 3, x_range=[-3, -2], color=GREEN_C)
+    flat = axes.plot(lambda t: 1, x_range=[-2, -1], color=GREEN_C)
+    ramp_down = axes.plot(lambda t: -t, x_range=[-1, 0], color=GREEN_C)
+    zero2 = axes.plot(lambda t: 0, x_range=[0, 1], color=GREEN_C)
+    return VGroup(zero1, ramp_up, flat, ramp_down, zero2)
+
 
 
 def create_shift_animation(scene, axes, formula, labels_data, corner=UR,

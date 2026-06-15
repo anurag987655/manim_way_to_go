@@ -20,7 +20,7 @@ class Shift(Scene):
         sample_points = [(-1, 0), (0, 1), (1, 1), (2, 0)]
 
         # One line replaces the whole loop
-        animate_sample_points(
+        yellow_dots,yellow_labels = animate_sample_points(
             scene=self,
             axes=axes,
             sample_points=sample_points,
@@ -54,3 +54,18 @@ class Shift(Scene):
         )
         
         self.wait(2)
+
+        old_y_label = labels[1]  # because labels = VGroup(x_label, y_label)
+        new_y_label = MathTex("x(t+2)", color=old_y_label.get_color()).scale(0.8)
+        new_y_label.move_to(old_y_label)
+        self.play(Transform(old_y_label, new_y_label))
+
+        # 2. Build the shifted signal and transform (slide/morph)
+        shifted_signal = build_shifted_signal(axes, shift=2)
+        self.play(Transform(signal, shifted_signal, run_time=2, rate_func=rate_functions.ease_in_out_sine))
+
+        # 3. Fade out the yellow dots and their labels (they are no longer needed)
+        self.play(FadeOut(yellow_dots))
+
+        self.wait(2)
+
