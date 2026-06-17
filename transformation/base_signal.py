@@ -10,6 +10,16 @@ def make_axes(x_range=[-6, 6, 1], y_range=[-0.5, 2, 0.5]):
         y_axis_config={"include_numbers": True},
     ).scale(0.9)
 
+def make_discrete_axes(x_range=[-7, 7, 1], y_range=[-3, 4, 1]):
+    """Specific axes for discrete signals with larger range."""
+    return Axes(
+        x_range=x_range,
+        y_range=y_range,
+        axis_config={"color": GREY_B},
+        x_axis_config={"include_numbers": True},
+        y_axis_config={"include_numbers": True},
+    ).scale(0.9)
+
 def add_axis_labels(axes, x_text="t", y_text="x(t)"):
     x_label = MathTex(x_text).scale(0.8)
     y_label = MathTex(y_text).scale(0.8)
@@ -139,6 +149,34 @@ def build_reversal_signal(axes):
     return VGroup(zero1, ramp_up, flat, ramp_down, zero2)
 
 
+def build_discrete_signal(axes, data_dict, stem_color=GREEN_C, dot_color=YELLOW):
+    """
+    Build a discrete signal (stem plot) with green stems and yellow dots.
+    """
+    stems = VGroup()
+    for n, val in data_dict.items():
+        # Vertical line from axis to point
+        line = Line(axes.c2p(n, 0), axes.c2p(n, val), color=stem_color, stroke_width=4)
+        dot = Dot(axes.c2p(n, val), color=dot_color, radius=0.08)
+        stems.add(VGroup(line, dot))
+    return stems
+
+def build_shifted_discrete_signal(axes, data_dict, shift=2, stem_color=GREEN_C, dot_color=YELLOW):
+    """x[n] -> x[n+shift]"""
+    new_data = {n - shift: val for n, val in data_dict.items()}
+    return build_discrete_signal(axes, new_data, stem_color=stem_color, dot_color=dot_color)
+
+def build_scaled_discrete_signal(axes, data_dict, factor=2, stem_color=GREEN_C, dot_color=YELLOW):
+    """x[n] -> x[n/factor] (Interpolation/Expansion)"""
+    new_data = {n * factor: val for n, val in data_dict.items()}
+    return build_discrete_signal(axes, new_data, stem_color=stem_color, dot_color=dot_color)
+
+def build_reversal_discrete_signal(axes, data_dict, stem_color=GREEN_C, dot_color=YELLOW):
+    """x[n] -> x[-n]"""
+    new_data = {-n: val for n, val in data_dict.items()}
+    return build_discrete_signal(axes, new_data, stem_color=stem_color, dot_color=dot_color)
+
+
 def create_transformation_animation(scene, axes, formula, labels_data, corner=UR,
                                     dot_color=RED, dot_radius=0.08, dot_run_time=1.0,
                                     label_scale=0.7, label_color=GOLD):
@@ -169,15 +207,17 @@ def create_transformation_animation(scene, axes, formula, labels_data, corner=UR
         prev_label = label
     
     # Now animate dots from left side of each label to axes point
+    dots_vgroup = VGroup()
     for label, data in zip(labels_vgroup, labels_data):
         # Get left side of the label (a bit to the left for clarity)
         start_point = label.get_left() + LEFT * 0.2
         # Target point on axes
         t, x = data["point"]
         target_point = axes.c2p(t, x)
-        
+
         dot = Dot(start_point, color=dot_color, radius=dot_radius)
         scene.add(dot)
         scene.play(dot.animate.move_to(target_point), run_time=dot_run_time, rate_func=rate_functions.ease_out_sine)
-    
-    return VGroup(formula_label, labels_vgroup)
+        dots_vgroup.add(dot)
+
+    return VGroup(formula_label, labels_vgroup, dots_vgroup)
