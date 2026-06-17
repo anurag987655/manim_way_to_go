@@ -200,9 +200,14 @@ class Reversal(Scene):
         new_y_label.move_to(old_y_label)
         self.play(Transform(old_y_label, new_y_label))
 
-        # Transform the signal (Flip)
-        reversed_signal = build_reversal_signal(axes)
-        self.play(Transform(signal, reversed_signal, run_time=2, rate_func=rate_functions.ease_in_out_sine))
+        # Transform the signal (Flip effect)
+        # Scaling X by -1 creates a perfect reflection across the Y-axis
+        # This "squashes" and then "expands" the signal, looking like a 2D flip
+        self.play(
+            signal.animate.scale([-1, 1, 1], about_point=axes.c2p(0, 0)),
+            run_time=2,
+            rate_func=rate_functions.ease_in_out_sine
+        )
 
         # Cleanup
         self.play(FadeOut(yellow_dots))
