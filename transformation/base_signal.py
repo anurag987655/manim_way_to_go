@@ -88,41 +88,64 @@ def build_shifted_signal(axes, shift=2):
 
 
 
-def create_shift_animation(scene, axes, formula, labels_data, corner=UR,
-                           dot_color=RED, dot_radius=0.08, dot_run_time=1.0,
-                           label_scale=0.7, label_color=GOLD):
+def build_scaled_signal(axes, scale=2):
+    """
+    Build the signal x(scale * t) for scale=2 (compression).
+    Original x(t):
+        0       for -3 <= t <= -1
+        t+1     for -1 <= t <= 0
+        1       for 0 <= t <= 1
+        2-t     for 1 <= t <= 2
+        0       for 2 <= t <= 3
+    x(2t):
+        0       for -1.5 <= t <= -0.5
+        2t+1    for -0.5 <= t <= 0
+        1       for 0 <= t <= 0.5
+        2-2t    for 0.5 <= t <= 1
+        0       for 1 <= t <= 1.5
+    """
+    if scale == 2:
+        zero1 = axes.plot(lambda t: 0, x_range=[-1.5, -0.5], color=GREEN_C)
+        ramp_up = axes.plot(lambda t: 2*t + 1, x_range=[-0.5, 0], color=GREEN_C)
+        flat = axes.plot(lambda t: 1, x_range=[0, 0.5], color=GREEN_C)
+        ramp_down = axes.plot(lambda t: 2 - 2*t, x_range=[0.5, 1], color=GREEN_C)
+        zero2 = axes.plot(lambda t: 0, x_range=[1, 1.5], color=GREEN_C)
+        return VGroup(zero1, ramp_up, flat, ramp_down, zero2)
+    return build_custom_signal(axes)
+
+
+
+def build_reversal_signal(axes):
+    """
+    Build the signal x(-t).
+    Original x(t):
+        0       for -3 <= t <= -1
+        t+1     for -1 <= t <= 0
+        1       for 0 <= t <= 1
+        2-t     for 1 <= t <= 2
+        0       for 2 <= t <= 3
+    x(-t):
+        0       for -3 <= t <= -2
+        t+2     for -2 <= t <= -1
+        1       for -1 <= t <= 0
+        1-t     for 0 <= t <= 1
+        0       for 1 <= t <= 3
+    """
+    zero1 = axes.plot(lambda t: 0, x_range=[-3, -2], color=GREEN_C)
+    ramp_up = axes.plot(lambda t: t + 2, x_range=[-2, -1], color=GREEN_C)
+    flat = axes.plot(lambda t: 1, x_range=[-1, 0], color=GREEN_C)
+    ramp_down = axes.plot(lambda t: 1 - t, x_range=[0, 1], color=GREEN_C)
+    zero2 = axes.plot(lambda t: 0, x_range=[1, 3], color=GREEN_C)
+    return VGroup(zero1, ramp_up, flat, ramp_down, zero2)
+
+
+def create_transformation_animation(scene, axes, formula, labels_data, corner=UR,
+                                    dot_color=RED, dot_radius=0.08, dot_run_time=1.0,
+                                    label_scale=0.7, label_color=GOLD):
     """
     Create a formula at the specified corner, then stack labels below it,
     and animate red dots from the left side of each label to its corresponding point on the axes.
-
-    Parameters
-    ----------
-    scene : Scene
-        The Manim scene.
-    axes : Axes
-        The coordinate system.
-    formula : str
-        LaTeX string for the formula (e.g. "x(t+2)").
-    labels_data : list of dict
-        Each dict: {"text": str, "point": (t, x)}.
-        The order of the list defines the vertical stack (top to bottom).
-    corner : str or list, default=UR
-        Where to place the formula.
-    dot_color : str, default=RED
-        Color of the flying dots.
-    dot_radius : float, default=0.08
-        Radius of each dot.
-    dot_run_time : float, default=1.0
-        Duration of the dot's flight.
-    label_scale : float, default=0.7
-        Scale of the stacked labels.
-    label_color : str, default=GOLD
-        Color of the labels.
-
-    Returns
-    -------
-    VGroup
-        The formula and all stacked labels (useful for later removal).
+    Generic version of the original shift animation.
     """
     # Create formula label
     formula_label = MathTex(formula, color=BLUE).scale(0.9).to_corner(corner)
