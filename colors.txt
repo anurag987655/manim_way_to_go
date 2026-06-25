@@ -1,0 +1,6 @@
+Strictly following these requirements for animations : 
+
+- The headlines should be bold and in blue color 
+- The Axes should be grey 
+- If the signal is continuous time, the plot should have the color green_c and any equation related to continuous time should be gold 
+- If the signal is discrete time, the plot should have gold color and any equation related to discrete time signal should have green_c color. 

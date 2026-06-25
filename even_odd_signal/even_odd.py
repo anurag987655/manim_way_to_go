@@ -83,7 +83,7 @@ class Scene2(Scene):
         self.play(left_group.animate.scale(0.5).to_edge(LEFT).shift(DOWN*0.5))
         self.wait(1)
 
-        rgroup, xlab2, ylab2 = ct_axes(y_range=[-1.5, 1.5, 0.5], x_label="t", y_label="x(-t)")
+        rgroup, xlab2, ylab2 = ct_axes(y_range=[-1.5, 1.5, 0.5], x_label="t", y_label="-x(t)")
         rgroup.scale(0.5)
         rgroup.next_to(left_group, RIGHT, buff=1.0)
         axes_right = rgroup[0]
@@ -94,7 +94,7 @@ class Scene2(Scene):
         self.add(sine_copy)
 
         self.play(
-            sine_copy.animate.scale([-1, -1, 1]).move_to(axes_right.get_center()),
+            sine_copy.animate.rotate(PI, axis=UP).move_to(axes_right.get_center()),
             run_time=2
         )
         self.wait(1)
