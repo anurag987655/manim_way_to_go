@@ -163,23 +163,39 @@ class Scene3(Scene):
 
         e1 = MathTex(r"x_e(t) = \frac{x(t) + x(-t)}{2}", color=YELLOW_C).scale(0.65)
         e1.next_to(even_formula, DOWN, buff=0.5)
-        self.play(Write(e1))
-        self.wait(0.4)
+        e1_rect = SurroundingRectangle(e1, color=WHITE, fill_opacity=0.2, stroke_width=0, buff=0.1)
+        self.play(
+            Write(e1, run_time=2),
+            Transform(even_rect, e1_rect),
+        )
+        self.wait(2)
 
         e2 = MathTex(r"\Rightarrow x_e(-t) = \frac{x(-t) + x(t)}{2}", color=YELLOW_C).scale(0.65)
         e2.next_to(e1, DOWN, buff=0.25)
-        self.play(Write(e2))
-        self.wait(0.4)
+        e2_rect = SurroundingRectangle(e2, color=WHITE, fill_opacity=0.2, stroke_width=0, buff=0.1)
+        self.play(
+            Write(e2, run_time=2),
+            Transform(even_rect, e2_rect),
+        )
+        self.wait(2)
 
         e3 = MathTex(r"\Rightarrow x_e(-t) = \frac{x(t) + x(-t)}{2}", color=YELLOW_C).scale(0.65)
         e3.next_to(e2, DOWN, buff=0.25)
-        self.play(Write(e3))
-        self.wait(0.4)
+        e3_rect = SurroundingRectangle(e3, color=WHITE, fill_opacity=0.2, stroke_width=0, buff=0.1)
+        self.play(
+            Write(e3, run_time=2),
+            Transform(even_rect, e3_rect),
+        )
+        self.wait(2)
 
         e_conc = MathTex(r"\therefore x_e(t) = x_e(-t)", color=YELLOW_C).scale(0.65)
         e_conc.next_to(e3, DOWN, buff=0.25)
-        self.play(Write(e_conc), run_time=1.2)
-        self.wait(1)
+        conc_rect = SurroundingRectangle(e_conc, color=WHITE, fill_opacity=0.2, stroke_width=0, buff=0.1)
+        self.play(
+            Write(e_conc, run_time=2),
+            Transform(even_rect, conc_rect),
+        )
+        self.wait(2.5)
 
         self.play(
             FadeOut(even_rect),
@@ -203,23 +219,39 @@ class Scene3(Scene):
 
         o1 = MathTex(r"x_o(t) = \frac{x(t) - x(-t)}{2}", color=PURPLE_B).scale(0.65)
         o1.next_to(odd_formula2, DOWN, buff=0.5)
-        self.play(Write(o1))
-        self.wait(0.4)
+        o1_rect = SurroundingRectangle(o1, color=WHITE, fill_opacity=0.2, stroke_width=0, buff=0.1)
+        self.play(
+            Write(o1, run_time=2),
+            Transform(odd_rect, o1_rect),
+        )
+        self.wait(2)
 
         o2 = MathTex(r"\Rightarrow x_o(-t) = \frac{x(-t) - x(t)}{2}", color=PURPLE_B).scale(0.65)
         o2.next_to(o1, DOWN, buff=0.25)
-        self.play(Write(o2))
-        self.wait(0.4)
+        o2_rect = SurroundingRectangle(o2, color=WHITE, fill_opacity=0.2, stroke_width=0, buff=0.1)
+        self.play(
+            Write(o2, run_time=2),
+            Transform(odd_rect, o2_rect),
+        )
+        self.wait(2)
 
         o3 = MathTex(r"\Rightarrow x_o(-t) = -\frac{x(t) - x(-t)}{2}", color=PURPLE_B).scale(0.65)
         o3.next_to(o2, DOWN, buff=0.25)
-        self.play(Write(o3))
-        self.wait(0.4)
+        o3_rect = SurroundingRectangle(o3, color=WHITE, fill_opacity=0.2, stroke_width=0, buff=0.1)
+        self.play(
+            Write(o3, run_time=2),
+            Transform(odd_rect, o3_rect),
+        )
+        self.wait(2)
 
         o_conc = MathTex(r"\therefore x_o(t) = -x_o(-t)", color=PURPLE_B).scale(0.65)
         o_conc.next_to(o3, DOWN, buff=0.25)
-        self.play(Write(o_conc), run_time=1.2)
-        self.wait(1)
+        conc_o_rect = SurroundingRectangle(o_conc, color=WHITE, fill_opacity=0.2, stroke_width=0, buff=0.1)
+        self.play(
+            Write(o_conc, run_time=2),
+            Transform(odd_rect, conc_o_rect),
+        )
+        self.wait(2.5)
 
         self.play(
             FadeOut(odd_rect),
@@ -431,4 +463,6 @@ class Scene3(Scene):
         verify[4].set_color(GREEN_C)
         verify.next_to(VGroup(even_prop, odd_prop), DOWN, buff=0.3)
         self.play(Write(verify), run_time=1.5)
+        self.wait(2)
+        self.play(FadeOut(deriv_e), FadeOut(deriv_o), run_time=0.5)
         self.wait(2)
