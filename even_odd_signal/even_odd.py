@@ -256,7 +256,7 @@ class Scene3(Scene):
         self.wait(0.2)
 
         deriv_e = MathTex(r"\frac{x(t)+x(-t)}{2}", color=YELLOW_C).scale(0.4)
-        deriv_e.next_to(ax_xe[0], UP, buff=0.05)
+        deriv_e.next_to(ax_xe[0], UP, buff=0.05).shift(RIGHT * 0.4)
         self.play(Write(deriv_e), run_time=0.8)
 
         # Smoothly half both pulses
@@ -302,7 +302,7 @@ class Scene3(Scene):
         self.wait(0.2)
 
         deriv_o = MathTex(r"\frac{x(t)-x(-t)}{2}", color=PURPLE_C).scale(0.4)
-        deriv_o.next_to(ax_xo[0], UP, buff=0.05)
+        deriv_o.next_to(ax_xo[0], UP, buff=0.05).shift(RIGHT * 0.4)
         self.play(Write(deriv_o), run_time=0.8)
 
         # Smoothly half both pulses
