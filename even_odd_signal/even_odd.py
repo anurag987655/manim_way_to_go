@@ -135,11 +135,86 @@ class Scene3(Scene):
         self.play(Write(odd_formula), run_time=2)
         self.wait(2)
 
-        # Clear all formulas
+        # === Even proof: x_e(t) = x_e(-t) ===
+        even_rect = SurroundingRectangle(even_formula, color=YELLOW_C, buff=0.1)
+        self.play(Create(even_rect))
         self.play(
             FadeOut(decomp_formula),
-            FadeOut(even_formula),
             FadeOut(odd_formula),
+        )
+        self.play(
+            even_rect.animate.move_to(UP * 1.4),
+            even_formula.animate.move_to(UP * 1.4),
+        )
+        self.wait(0.3)
+
+        e1 = MathTex(r"x_e(t) = \frac{x(t) + x(-t)}{2}", color=YELLOW_C).scale(0.65)
+        e1.next_to(even_formula, DOWN, buff=0.5)
+        self.play(Write(e1))
+        self.wait(0.4)
+
+        e2 = MathTex(r"\Rightarrow x_e(-t) = \frac{x(-t) + x(t)}{2}", color=YELLOW_C).scale(0.65)
+        e2.next_to(e1, DOWN, buff=0.25)
+        self.play(Write(e2))
+        self.wait(0.4)
+
+        e3 = MathTex(r"\Rightarrow x_e(-t) = \frac{x(t) + x(-t)}{2}", color=YELLOW_C).scale(0.65)
+        e3.next_to(e2, DOWN, buff=0.25)
+        self.play(Write(e3))
+        self.wait(0.4)
+
+        e_conc = MathTex(r"\therefore x_e(t) = x_e(-t)", color=YELLOW_C).scale(0.65)
+        e_conc.next_to(e3, DOWN, buff=0.25)
+        self.play(Write(e_conc), run_time=1.2)
+        self.wait(1)
+
+        self.play(
+            FadeOut(even_rect),
+            FadeOut(even_formula),
+            FadeOut(e1),
+            FadeOut(e2),
+            FadeOut(e3),
+            FadeOut(e_conc),
+        )
+        self.wait(0.3)
+
+        # === Odd proof: x_o(t) = -x_o(-t) ===
+        odd_formula2 = MathTex(
+            r"x_o(t)", r"=", r"\frac{x(t) - x(-t)}{2}", color=GOLD
+        ).scale(0.7)
+        odd_formula2.move_to(UP * 1.4)
+
+        odd_rect = SurroundingRectangle(odd_formula2, color=PURPLE_B, buff=0.1)
+        self.play(Write(odd_formula2), Create(odd_rect))
+        self.wait(0.3)
+
+        o1 = MathTex(r"x_o(t) = \frac{x(t) - x(-t)}{2}", color=PURPLE_B).scale(0.65)
+        o1.next_to(odd_formula2, DOWN, buff=0.5)
+        self.play(Write(o1))
+        self.wait(0.4)
+
+        o2 = MathTex(r"\Rightarrow x_o(-t) = \frac{x(-t) - x(t)}{2}", color=PURPLE_B).scale(0.65)
+        o2.next_to(o1, DOWN, buff=0.25)
+        self.play(Write(o2))
+        self.wait(0.4)
+
+        o3 = MathTex(r"\Rightarrow x_o(-t) = -\frac{x(t) - x(-t)}{2}", color=PURPLE_B).scale(0.65)
+        o3.next_to(o2, DOWN, buff=0.25)
+        self.play(Write(o3))
+        self.wait(0.4)
+
+        o_conc = MathTex(r"\therefore x_o(t) = -x_o(-t)", color=PURPLE_B).scale(0.65)
+        o_conc.next_to(o3, DOWN, buff=0.25)
+        self.play(Write(o_conc), run_time=1.2)
+        self.wait(1)
+
+        self.play(
+            FadeOut(odd_rect),
+            FadeOut(odd_formula2),
+            FadeOut(o1),
+            FadeOut(o2),
+            FadeOut(o3),
+            FadeOut(o_conc),
         )
         self.wait(0.5)
 
@@ -282,6 +357,12 @@ class Scene3(Scene):
         )
         self.wait(0.3)
 
+        # Show even symmetry property
+        even_prop = MathTex(r"x_e(t) = x_e(-t)", color=YELLOW_C).scale(0.45)
+        even_prop.next_to(ax_xe, DOWN, buff=0.1)
+        self.play(Write(even_prop), run_time=1)
+        self.wait(0.5)
+
         # --- x_o(t): both slide down together, x(-t) flips at top first ---
         green_xo = pulse_mobject(ax_xt[0], 0, 2, 1, GREEN_C)
         red_xo = pulse_mobject(ax_xnt[0], -2, 0, 1, RED_C)
@@ -320,7 +401,11 @@ class Scene3(Scene):
             red_xo.animate.set_color(odd_color),
             run_time=0.6
         )
-        self.wait(0.3)
+        # Show odd symmetry property
+        odd_prop = MathTex(r"x_o(t) = -x_o(-t)", color=PURPLE_C).scale(0.45)
+        odd_prop.next_to(ax_xo, DOWN, buff=0.1)
+        self.play(Write(odd_prop), run_time=1)
+        self.wait(0.5)
 
         # Verification
         verify = MathTex(
@@ -331,6 +416,6 @@ class Scene3(Scene):
         verify[0].set_color(YELLOW_C)
         verify[2].set_color(PURPLE_C)
         verify[4].set_color(GREEN_C)
-        verify.next_to(grid, DOWN, buff=0.4)
+        verify.next_to(VGroup(even_prop, odd_prop), DOWN, buff=0.3)
         self.play(Write(verify), run_time=1.5)
         self.wait(2)
