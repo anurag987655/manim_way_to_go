@@ -267,6 +267,19 @@ class Scene3(Scene):
             Transform(red_xe, red_half),
             run_time=1.5
         )
+        # Unify even signal color and remove middle vertical line
+        even_color = YELLOW_C
+        even_signal = VGroup(
+            Line(ax_xe[0].c2p(-2, 0), ax_xe[0].c2p(-2, 0.5), color=even_color, stroke_width=4),
+            Line(ax_xe[0].c2p(-2, 0.5), ax_xe[0].c2p(2, 0.5), color=even_color, stroke_width=4),
+            Line(ax_xe[0].c2p(2, 0.5), ax_xe[0].c2p(2, 0), color=even_color, stroke_width=4),
+        )
+        self.play(
+            FadeOut(green_xe),
+            FadeOut(red_xe),
+            FadeIn(even_signal),
+            run_time=0.6
+        )
         self.wait(0.3)
 
         # --- x_o(t): both slide down together, x(-t) flips at top first ---
@@ -299,6 +312,13 @@ class Scene3(Scene):
             Transform(green_xo, green_half_xo),
             Transform(red_xo, red_half_xo),
             run_time=1.5
+        )
+        # Unify odd signal color
+        odd_color = PURPLE_C
+        self.play(
+            green_xo.animate.set_color(odd_color),
+            red_xo.animate.set_color(odd_color),
+            run_time=0.6
         )
         self.wait(0.3)
 
