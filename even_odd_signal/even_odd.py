@@ -21,9 +21,39 @@ class Scene1(Scene):
         self.play(title1.animate.to_edge(UP))
         self.wait(1)
 
-        even_eq = MathTex(r"x(t) = x(-t)", color = GOLD)
-        even_eq.next_to(title1, DOWN, buff = 0.5)
-        self.play(Write(even_eq), run_time = 2)
+        even_eq = MathTex(r"x(t)", r"=", r"x(-t)", color=GOLD)
+        even_eq.next_to(title1, DOWN, buff=0.5)
+        self.play(Write(even_eq), run_time=2)
+
+        orig_label = Text("Original Signal", color=GREEN_C, font_size=22)
+        orig_label.next_to(even_eq[0], DOWN, buff=0.8).shift(LEFT * 0.7)
+        orig_arrow = Arrow(
+            start=orig_label.get_top(),
+            end=even_eq[0].get_bottom(),
+            buff=0.1,
+            color=GREEN_C,
+            stroke_width=3,
+        )
+
+        rev_label = Text("Time Reversed Signal", color=RED_C, font_size=22)
+        rev_label.next_to(even_eq[2], DOWN, buff=0.8).shift(RIGHT * 0.7)
+        rev_arrow = Arrow(
+            start=rev_label.get_top(),
+            end=even_eq[2].get_bottom(),
+            buff=0.1,
+            color=RED_C,
+            stroke_width=3,
+        )
+
+        self.play(Write(orig_label), Create(orig_arrow), run_time=2)
+        self.wait(0.5)
+        self.play(Write(rev_label), Create(rev_arrow), run_time=2)
+        self.wait(2)
+        self.play(
+            FadeOut(orig_label), FadeOut(orig_arrow),
+            FadeOut(rev_label), FadeOut(rev_arrow),
+        )
+        self.wait(0.3)
 
         # Positioning the continuous axis
         caxes, x_lab, y_lab = ct_axes(y_range=[-1.2, 1.5, 0.5])
