@@ -26,7 +26,7 @@ class Scene1(Scene):
         self.play(Write(even_eq), run_time=2)
 
         orig_label = Text("Original Signal", color=GREEN_C, font_size=22)
-        orig_label.next_to(even_eq[0], DOWN, buff=0.8).shift(LEFT * 0.7)
+        orig_label.next_to(even_eq[0], DOWN, buff=2.5).shift(LEFT * 2.0)
         orig_arrow = Arrow(
             start=orig_label.get_top(),
             end=even_eq[0].get_bottom(),
@@ -36,7 +36,7 @@ class Scene1(Scene):
         )
 
         rev_label = Text("Time Reversed Signal", color=RED_C, font_size=22)
-        rev_label.next_to(even_eq[2], DOWN, buff=0.8).shift(RIGHT * 0.7)
+        rev_label.next_to(even_eq[2], DOWN, buff=2.5).shift(RIGHT * 2.0)
         rev_arrow = Arrow(
             start=rev_label.get_top(),
             end=even_eq[2].get_bottom(),
@@ -99,10 +99,54 @@ class Scene2(Scene):
         self.play(title2.animate.to_edge(UP))
         self.wait(1)
         
-        odd_eq  = MathTex(r"x(t)=-x(-t)", color = GOLD)
-        odd_eq.next_to(title2, DOWN, buff = 0.1)
-        self.play(Write(odd_eq), run_time = 2)
+        odd_eq = MathTex(r"x(t)", r"=", r"-", r"x(-t)", color=GOLD)
+        odd_eq.next_to(title2, DOWN, buff=0.1)
+        self.play(Write(odd_eq), run_time=2)
+
+        orig_label = Text("Original Signal", color=GREEN_C, font_size=22)
+        orig_label.next_to(odd_eq[0], DOWN, buff=2.5).shift(LEFT * 2.0)
+        orig_arrow = Arrow(
+            start=orig_label.get_top(),
+            end=odd_eq[0].get_bottom(),
+            buff=0.1,
+            color=GREEN_C,
+            stroke_width=3,
+        )
+
+        amp_label = Text("Amplitude\nReversal", color=PURPLE_C, font_size=22)
+        amp_label.next_to(odd_eq[2], DOWN, buff=2.5)
+        amp_arrow = Arrow(
+            start=amp_label.get_top(),
+            end=odd_eq[2].get_bottom(),
+            buff=0.1,
+            color=PURPLE_C,
+            stroke_width=3,
+        )
+
+        time_label = Text("Time Reversal", color=RED_C, font_size=22)
+        time_label.next_to(odd_eq[3], DOWN, buff=2.5).shift(RIGHT * 2.0)
+        time_arrow = Arrow(
+            start=time_label.get_top(),
+            end=odd_eq[3].get_bottom(),
+            buff=0.1,
+            color=RED_C,
+            stroke_width=3,
+        )
+
+        self.play(Write(orig_label), Create(orig_arrow), run_time=2)
         self.wait(1)
+        
+        self.play(Write(time_label), Create(time_arrow), run_time=2)
+        self.wait(2)
+
+        self.play(Write(amp_label), Create(amp_arrow), run_time=2)
+        self.wait(1)
+        
+        self.play(
+            FadeOut(orig_label), FadeOut(orig_arrow),
+            FadeOut(amp_label), FadeOut(amp_arrow),
+            FadeOut(time_label), FadeOut(time_arrow),
+        )
 
         caxes, x_lab, y_lab = ct_axes(y_range=[-1.5, 1.5, 0.5])
         caxes.next_to(odd_eq, DOWN, buff=0.3)
