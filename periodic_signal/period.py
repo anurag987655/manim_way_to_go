@@ -51,19 +51,19 @@ class PeriodicSignal(Scene):
                 return 0.0
             return float(np.sign(s))
 
+        # Full square wave - GREEN
         square_wave = square_axes.plot(
             square_func,
             color=GREEN,
             use_smoothing=False,
         )
 
-
         self.play(Create(square_axes), Write(t_label_sq), Write(x_label_sq))
         self.play(Write(x_labels_sq), Write(y_labels_sq))
-        self.play(Create(square_wave))
+        self.play(Create(square_wave), run_time=2)
         self.wait(1)
 
-        # Step 4: Triangular wave axes (shifted down, with more buff)
+        # Step 4: Triangular wave axes (shifted down)
         tri_axes = Axes(
             x_range=[0, 6 * PI, PI],
             y_range=[-1.5, 1.5, 0.5],
@@ -101,6 +101,7 @@ class PeriodicSignal(Scene):
             else:
                 return 1 - 2 * (mod - PI) / PI
 
+        # Full triangular wave - YELLOW
         tri_wave = tri_axes.plot(
             tri_func,
             color=YELLOW,
@@ -108,7 +109,83 @@ class PeriodicSignal(Scene):
 
         self.play(Create(tri_axes), Write(t_label_tri), Write(x_label_tri))
         self.play(Write(x_labels_tri), Write(y_labels_tri))
-        self.play(Create(tri_wave))
+        self.play(Create(tri_wave), run_time=2)
+        self.wait(1)
 
-        # Step 5: Pause for 3 seconds
+        # Step 5: Now highlight non-redundant part (first period)
+        # Square wave - highlight first period in RED
+        square_non_redundant = square_axes.plot(
+            square_func,
+            x_range=[0, 2 * PI],
+            color=RED,
+            use_smoothing=False,
+        )
+        # Bracket for period T - below with arrows
+        bracket_line_sq = Line(
+            square_axes.c2p(0, 0) + DOWN * 1.4,
+            square_axes.c2p(2 * PI, 0) + DOWN * 1.4,
+            color=RED,
+            stroke_width=2,
+        )
+        arrow_left_sq = Arrow(
+            bracket_line_sq.get_start() + LEFT * 0.1,
+            bracket_line_sq.get_start(),
+            color=RED,
+            buff=0,
+            stroke_width=2,
+            max_tip_length_to_length_ratio=0.5,
+        )
+        arrow_right_sq = Arrow(
+            bracket_line_sq.get_end() + RIGHT * 0.1,
+            bracket_line_sq.get_end(),
+            color=RED,
+            buff=0,
+            stroke_width=2,
+            max_tip_length_to_length_ratio=0.5,
+        )
+        bracket_label_sq = MathTex("T", font_size=28, color=RED).next_to(
+            bracket_line_sq, DOWN, buff=0.1
+        )
+
+        self.play(Create(square_non_redundant), run_time=1.5)
+        self.play(Create(bracket_line_sq), Create(arrow_left_sq), Create(arrow_right_sq), Write(bracket_label_sq))
+        self.wait(1)
+
+        # Triangular wave - highlight first period in ORANGE
+        tri_non_redundant = tri_axes.plot(
+            tri_func,
+            x_range=[0, 2 * PI],
+            color=ORANGE,
+        )
+        # Bracket for period T - below with arrows
+        bracket_line_tri = Line(
+            tri_axes.c2p(0, 0) + DOWN * 1.4,
+            tri_axes.c2p(2 * PI, 0) + DOWN * 1.4,
+            color=ORANGE,
+            stroke_width=2,
+        )
+        arrow_left_tri = Arrow(
+            bracket_line_tri.get_start() + LEFT * 0.1,
+            bracket_line_tri.get_start(),
+            color=ORANGE,
+            buff=0,
+            stroke_width=2,
+            max_tip_length_to_length_ratio=0.5,
+        )
+        arrow_right_tri = Arrow(
+            bracket_line_tri.get_end() + RIGHT * 0.1,
+            bracket_line_tri.get_end(),
+            color=ORANGE,
+            buff=0,
+            stroke_width=2,
+            max_tip_length_to_length_ratio=0.5,
+        )
+        bracket_label_tri = MathTex("T", font_size=28, color=ORANGE).next_to(
+            bracket_line_tri, DOWN, buff=0.1
+        )
+
+        self.play(Create(tri_non_redundant), run_time=1.5)
+        self.play(Create(bracket_line_tri), Create(arrow_left_tri), Create(arrow_right_tri), Write(bracket_label_tri))
+
+        # Step 6: Pause for 3 seconds
         self.wait(3)
