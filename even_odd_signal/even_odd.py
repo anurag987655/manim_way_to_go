@@ -85,9 +85,12 @@ class Scene1(Scene):
         cosine_copy = cosine_plot.copy()
         self.add(cosine_copy)
 
-        # Flip and move to right axes
+        left_origin = axes_left.c2p(0, 0)
+        right_origin = axes_right.c2p(0, 0)
+
+        # Flip around left axes origin and translate to right axes in one smooth motion
         self.play(
-            cosine_copy.animate.scale([-1, 1, 0]).move_to(axes_right.get_center()),
+            cosine_copy.animate.scale([-1, 1, 0], about_point=left_origin).shift(right_origin - left_origin),
             run_time=2
         )
         self.wait(1)
@@ -172,8 +175,11 @@ class Scene2(Scene):
         sine_copy = sine_plot.copy()
         self.add(sine_copy)
 
+        left_origin = axes_left.c2p(0, 0)
+        right_origin = axes_right.c2p(0, 0)
+
         self.play(
-            sine_copy.animate.rotate(PI, axis=UP).move_to(axes_right.get_center()),
+            sine_copy.animate.rotate(PI, axis=UP, about_point=left_origin).shift(right_origin - left_origin),
             run_time=2
         )
         self.wait(1)
