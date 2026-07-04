@@ -226,7 +226,7 @@ class PeriodicSignal(Scene):
         self.play(Create(copied_period), run_time=1)
 
         # Shift arrow above the graph
-        arrow_start = square_axes.c2p(PI, 0) + UP * 0.9
+        arrow_start = square_axes.c2p(PI, 0) + UP * 1.2 
         arrow_end = arrow_start + RIGHT * shift_phys
         shift_arrow = Arrow(
             arrow_start,
@@ -265,7 +265,7 @@ class PeriodicSignal(Scene):
             Create(glow_original),
             Create(glow_copied),
             run_time=0.7,
-        )
+        )   
         self.play(
             FadeOut(glow_original),
             FadeOut(glow_copied),
