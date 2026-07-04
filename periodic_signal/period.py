@@ -187,5 +187,97 @@ class PeriodicSignal(Scene):
         self.play(Create(tri_non_redundant), run_time=1.5)
         self.play(Create(bracket_line_tri), Create(arrow_left_tri), Create(arrow_right_tri), Write(bracket_label_tri))
 
-        # Step 6: Pause for 3 seconds
+        # Step 6: Pause for 2 seconds after highlighting T on both signals
+        self.wait(2)
+
+        # Step 7: Fade out the triangular wave (bottom signal) completely
+        tri_group = VGroup(
+            tri_axes, x_labels_tri, y_labels_tri,
+            t_label_tri, x_label_tri, tri_wave,
+            tri_non_redundant, bracket_line_tri,
+            arrow_left_tri, arrow_right_tri, bracket_label_tri,
+        )
+        self.play(FadeOut(tri_group), run_time=1.5)
+        self.wait(2)
+
+        # Step 8: Bring square wave down and increase size
+        sq_group = VGroup(
+            square_axes, x_labels_sq, y_labels_sq,
+            t_label_sq, x_label_sq, square_wave,
+            square_non_redundant, bracket_line_sq,
+            arrow_left_sq, arrow_right_sq, bracket_label_sq,
+        )
+        self.play(
+            sq_group.animate.shift(DOWN * 0.8).scale(1.15),
+            run_time=1.5,
+        )
+        self.wait(0.5)
+
+        # Step 9: Perform shift animation - copy first period and shift it
+        shift_phys = square_axes.c2p(2 * PI, 0)[0] - square_axes.c2p(0, 0)[0]
+
+        copied_period = square_axes.plot(
+            square_func,
+            x_range=[0, 2 * PI],
+            color=RED,
+            use_smoothing=False,
+        ).set_opacity(0.5)
+
+        self.play(Create(copied_period), run_time=1)
+
+        # Shift arrow above the graph
+        arrow_start = square_axes.c2p(PI, 0) + UP * 0.9
+        arrow_end = arrow_start + RIGHT * shift_phys
+        shift_arrow = Arrow(
+            arrow_start,
+            arrow_end,
+            color=WHITE,
+            buff=0,
+            stroke_width=3,
+        )
+        shift_label = MathTex(r"\text{Shift by } T", font_size=30, color=WHITE)
+        shift_label.next_to(shift_arrow, UP, buff=0.15)
+
+        self.play(
+            copied_period.animate.shift(RIGHT * shift_phys),
+            Create(shift_arrow),
+            Write(shift_label),
+            run_time=2,
+        )
+        self.wait(1)
+
+        # Step 10: Glow effect on original and shifted sections
+        glow_original = square_axes.plot(
+            square_func,
+            x_range=[0, 2 * PI],
+            color=YELLOW,
+            use_smoothing=False,
+        ).set_stroke(width=8, opacity=0.9)
+
+        glow_copied = square_axes.plot(
+            square_func,
+            x_range=[2 * PI, 4 * PI],
+            color=YELLOW,
+            use_smoothing=False,
+        ).set_stroke(width=8, opacity=0.9)
+
+        self.play(
+            Create(glow_original),
+            Create(glow_copied),
+            run_time=0.7,
+        )
+        self.play(
+            FadeOut(glow_original),
+            FadeOut(glow_copied),
+            run_time=0.7,
+        )
+        self.wait(0.5)
+
+        # Step 11: Fade out shift elements
+        self.play(FadeOut(shift_arrow), FadeOut(shift_label), FadeOut(copied_period), run_time=0.5)
+
+        # Step 12: Display the periodicity equation x(t) = x(t+T)
+        equation = MathTex(r"x(t) = x(t + T)", font_size=48, color=WHITE)
+        equation.next_to(title, DOWN, buff=0.5)
+        self.play(Write(equation), run_time=2)
         self.wait(3)
