@@ -33,15 +33,22 @@ class Euler(ThreeDScene):
 
         self.play(Create(axes))
 
+        t_label = MathTex("t").scale(0.7).move_to(LEFT*5.3 + DOWN * 2.2 )
+        re_label = MathTex("Re").scale(0.7).move_to(RIGHT*4.2 + DOWN*1.5)
+        im_label = MathTex("Im").scale(0.7).move_to(RIGHT*1 + UP*1.7)
+        self.add_fixed_in_frame_mobjects(t_label, re_label, im_label)
+        self.play(Write(t_label), Write(re_label), Write(im_label))
+
         cos_wave = ParametricFunction(lambda t: axes.c2p(t, np.cos(t), 0),t_range=[0,3*PI],color=BLUE_C)
 
         sin_wave = ParametricFunction(lambda t: axes.c2p(t,0,np.sin(t)),t_range=[0, 3*PI],color=GREEN)
 
-        cos_label = MathTex(r"\cos(t)", color=BLUE_C).scale(0.5)
-        sin_label = MathTex(r"\sin(t)", color=GREEN).scale(0.5)
+        cos_label = MathTex(r"\cos(t)", color=BLUE_C).scale(0.5).to_edge(UP).shift(LEFT*3)
+        sin_label = MathTex(r"\sin(t)", color=GREEN).scale(0.5).to_edge(UP).shift(RIGHT*3)
+        self.add_fixed_in_frame_mobjects(cos_label, sin_label)
 
         self.play(Create(cos_wave), run_time = 2)
-        self.play(Write(cos_label)) 
+        self.play(Write(cos_label))
         self.wait(1)
 
         self.play(Create(sin_wave), run_time = 2)
