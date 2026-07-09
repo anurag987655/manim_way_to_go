@@ -104,5 +104,10 @@ class Euler(ThreeDScene):
         self.remove(trail)
         self.add(helix)
 
+        helix_label = MathTex(r"e^{it}", color=YELLOW).scale(0.7)
+        helix_label.move_to(axes.c2p(PI, 0, 1.7) + UP*0.5 + RIGHT*0.3)
+        self.add_fixed_orientation_mobjects(helix_label)
+
         self.move_camera(phi=70*DEGREES, theta=45*DEGREES, zoom=1, frame_center=[-2, 0, 1], run_time=1)
+        self.play(Write(helix_label))
         self.wait(2)
