@@ -27,7 +27,7 @@ class Euler(ThreeDScene):
         self.wait(1)
         axes = ThreeDAxes(x_range=[0,3* PI +1,1], y_range=[-2,2,1], z_range=[-2,2,1]).scale(0.7)
 
-        self.set_camera_orientation(phi=75*DEGREES,theta=45*DEGREES, frame_center=[-2, 0, 1])
+        self.set_camera_orientation(phi=70*DEGREES,theta=45*DEGREES, frame_center=[-2, 0, 1])
         self.add_fixed_in_frame_mobjects(title, formula)
 
 
