@@ -56,3 +56,43 @@ class Euler(ThreeDScene):
         self.add_fixed_orientation_mobjects(sin_label)
         self.play(Write(sin_label))
         self.wait(2)
+
+        tracker = ValueTracker(0)
+
+        dot = always_redraw(
+            lambda: Dot3D(
+                point=axes.c2p(
+                    tracker.get_value(),
+                    np.cos(tracker.get_value()),
+                    np.sin(tracker.get_value())
+                ),
+                color=RED,
+                radius=0.06
+            )
+        )
+
+        trail = TracedPath(dot.get_center, stroke_color=YELLOW, stroke_width=5)
+
+        self.add(trail, dot)
+
+        self.move_camera(phi=70*DEGREES, theta=45*DEGREES, zoom=2, frame_center=dot.get_center(), run_time=1)
+
+        cam_tracker = Dot3D(color=RED, radius=0.001).set_opacity(0)
+        self.add(cam_tracker)
+
+        def update_cam(m):
+            m.move_to(dot.get_center())
+            self.camera.frame_center = m.get_center()
+
+        cam_tracker.add_updater(update_cam)
+
+        self.play(
+            tracker.animate.set_value(3 * PI),
+            run_time=6,
+            rate_func=linear
+        )
+
+        cam_tracker.clear_updaters()
+        self.remove(cam_tracker)
+        self.move_camera(phi=70*DEGREES, theta=45*DEGREES, zoom=1, frame_center=[-2, 0, 1], run_time=1)
+        self.wait(2)
