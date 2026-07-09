@@ -1,0 +1,49 @@
+## The animation's objective to make understand the eulers identity 
+
+from manim import *
+
+# config.pixel_width = 1080
+# config.pixel_height = 1920
+# config.frame_width = 9
+# config.frame_height = 16
+# config.frame_rate = 60
+
+# config.background_color = "#0E1117"
+
+
+class Euler(ThreeDScene):
+    def construct(self):
+        title = Text("Eulers Identity", color = BLUE_C)
+        self.play(Write(title))
+        self.wait(1)
+        self.play(title.animate.to_edge(UP))
+
+        self.wait(0.8)
+
+        formula = MathTex(r"e^{i t} = \cos(t) + i \sin(t)", color= GOLD)
+        formula.next_to(title,DOWN, buff = 0.3)
+        self.play(Write(formula))
+
+        self.wait(1)
+        axes = ThreeDAxes(x_range=[0,3* PI +1,1], y_range=[-2,2,1], z_range=[-2,2,1]).scale(0.7)
+
+        self.set_camera_orientation(phi=75*DEGREES,theta=45*DEGREES, frame_center=[-2, 0, 1])
+        self.add_fixed_in_frame_mobjects(title, formula)
+
+
+        self.play(Create(axes))
+
+        cos_wave = ParametricFunction(lambda t: axes.c2p(t, np.cos(t), 0),t_range=[0,3*PI],color=BLUE_C)
+
+        sin_wave = ParametricFunction(lambda t: axes.c2p(t,0,np.sin(t)),t_range=[0, 3*PI],color=GREEN)
+
+        cos_label = MathTex(r"\cos(t)", color=BLUE_C).scale(0.5)
+        sin_label = MathTex(r"\sin(t)", color=GREEN).scale(0.5)
+
+        self.play(Create(cos_wave), run_time = 2)
+        self.play(Write(cos_label)) 
+        self.wait(1)
+
+        self.play(Create(sin_wave), run_time = 2)
+        self.play(Write(sin_label))
+        self.wait(2)
