@@ -39,18 +39,20 @@ class Euler(ThreeDScene):
         self.add_fixed_in_frame_mobjects(t_label, re_label, im_label)
         self.play(Write(t_label), Write(re_label), Write(im_label))
 
-        cos_wave = ParametricFunction(lambda t: axes.c2p(t, np.cos(t), 0),t_range=[0,3*PI],color=BLUE_C)
+        cos_wave = ParametricFunction(lambda t: axes.c2p(t, np.cos(t), 0), t_range=[0, 3*PI], color=BLUE_C)
+        sin_wave = ParametricFunction(lambda t: axes.c2p(t, 0, np.sin(t)), t_range=[0, 3*PI], color=GREEN)
 
-        sin_wave = ParametricFunction(lambda t: axes.c2p(t,0,np.sin(t)),t_range=[0, 3*PI],color=GREEN)
+        cos_label = MathTex(r"\cos(t)", color=BLUE_C).scale(0.5)
+        cos_label.move_to(axes.c2p(PI, -1.4, 0))
+        sin_label = MathTex(r"\sin(t)", color=GREEN).scale(0.5)
+        sin_label.move_to(axes.c2p(PI/2, 0, 1.4))
 
-        cos_label = MathTex(r"\cos(t)", color=BLUE_C).scale(0.5).to_edge(UP).shift(LEFT*3)
-        sin_label = MathTex(r"\sin(t)", color=GREEN).scale(0.5).to_edge(UP).shift(RIGHT*3)
-        self.add_fixed_in_frame_mobjects(cos_label, sin_label)
-
-        self.play(Create(cos_wave), run_time = 2)
+        self.play(Create(cos_wave), run_time=2)
+        self.add_fixed_orientation_mobjects(cos_label)
         self.play(Write(cos_label))
         self.wait(1)
 
-        self.play(Create(sin_wave), run_time = 2)
+        self.play(Create(sin_wave), run_time=2)
+        self.add_fixed_orientation_mobjects(sin_label)
         self.play(Write(sin_label))
         self.wait(2)
