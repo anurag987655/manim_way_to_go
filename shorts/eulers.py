@@ -94,5 +94,15 @@ class Euler(ThreeDScene):
 
         cam_tracker.clear_updaters()
         self.remove(cam_tracker)
+
+        helix = ParametricFunction(
+            lambda t: axes.c2p(t, np.cos(t), np.sin(t)),
+            t_range=[0, 3*PI],
+            color=YELLOW,
+            stroke_width=5
+        )
+        self.remove(trail)
+        self.add(helix)
+
         self.move_camera(phi=70*DEGREES, theta=45*DEGREES, zoom=1, frame_center=[-2, 0, 1], run_time=1)
         self.wait(2)
