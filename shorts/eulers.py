@@ -110,4 +110,9 @@ class Euler(ThreeDScene):
 
         self.move_camera(phi=70*DEGREES, theta=45*DEGREES, zoom=1, frame_center=[-2, 0, 1], run_time=1)
         self.play(Write(helix_label))
-        self.wait(2)
+        self.wait(1)
+
+        self.begin_ambient_camera_rotation(rate=0.3)
+        self.wait(14)
+        self.stop_ambient_camera_rotation()
+        self.wait(1)
