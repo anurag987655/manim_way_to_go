@@ -5,9 +5,17 @@
 from manim import * 
 import math
 
+config.pixel_width = 1080
+config.pixel_height = 1920
+config.frame_width = 9
+config.frame_height = 16
+config.frame_rate = 60
+
+config.background_color = "#0E1117"
+
 class Taylor(Scene):
     def construct(self):
-        head = Text("Taylor Series",color = BLUE_C).to_edge(UP)
+        head = Text("How close can polynomials get to eˣ?", color = BLUE_C).to_edge(UP)
         self.play(Write(head))
         self.wait(0.7)
 
