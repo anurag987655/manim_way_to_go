@@ -7,9 +7,8 @@ import math
 
 class Taylor(Scene):
     def construct(self):
-        head = Text("Taylor Series",color = BLUE_C)
+        head = Text("Taylor Series",color = BLUE_C).to_edge(UP)
         self.play(Write(head))
-        self.play(head.animate.to_edge(UP))
         self.wait(0.7)
 
         formula = MathTex(r"e^x = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \frac{x^4}{4!} + \frac{x^5}{5!} + \cdots", color = GOLD)
