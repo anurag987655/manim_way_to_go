@@ -42,15 +42,21 @@ class Taylor(Scene):
             MathTex(r"1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \frac{x^4}{4!} + \frac{x^5}{5!}", color=BLUE),
         ]
 
-        current_label = approximations[0].next_to(axes, DOWN, buff=0.2)
-        graphs = []
-        for i in range(6):
+        scales = [1.0, 0.9, 0.8, 0.7, 0.6, 0.5]
+        
+        current_graph = axes.plot(lambda x: 1, x_range=[-2,2], color=BLUE, stroke_width=3)
+        current_label = approximations[0].scale(scales[0]).next_to(current_graph.get_end(), RIGHT + UP, buff=0.1)
+        
+        self.play(Create(current_graph), Write(current_label))
+        self.wait(1)
+        
+        for i in range(1, 6):
             func = lambda x, n=i: sum([x**j / math.factorial(j) for j in range(n+1)])
-            graph = axes.plot(func, x_range=[-2,2], color=BLUE, stroke_width=3)
-            graphs.append(graph)
-            if i == 0:
-                self.play(Write(current_label), Create(graph))
+            new_graph = axes.plot(func, x_range=[-2,2], color=BLUE, stroke_width=3)
+            new_label = approximations[i].scale(scales[i])
+            if i >= 4:
+                new_label.next_to(new_graph.get_end(), DOWN + RIGHT, buff=0.1)
             else:
-                new_label = approximations[i].next_to(axes, DOWN, buff=0.2)
-                self.play(Transform(current_label, new_label), Create(graph))
-            self.wait(0.3)
+                new_label.next_to(new_graph.get_end(), RIGHT + UP, buff=0.1)
+            self.play(Transform(current_label, new_label), Transform(current_graph, new_graph))
+            self.wait(1)
