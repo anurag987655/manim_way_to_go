@@ -1,5 +1,8 @@
 from manim import *
 
+config.frame_rate = 60
+config.pixel_width = 1080
+config.pixel_height = 1920
 config.background_color = "#0E1117"
 
 
@@ -99,7 +102,7 @@ class CylindricalCoordinates(ThreeDScene):
             radius=r_scene,
             color=BLUE,
             stroke_width=2,
-            stroke_opacity=0.4,
+            stroke_opacity=0.6,
         ).move_to(axes.c2p(0, 0, 0))
 
         self.play(Create(circle), run_time=1.5)
