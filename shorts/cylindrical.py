@@ -11,8 +11,6 @@ class CylindricalCoordinates(ThreeDScene):
         x, y, z = 3, 4, 2
         r_val = np.sqrt(x**2 + y**2)
         theta_val = np.arctan2(y, x)
-        p_pos = np.array([x, y, z])
-        xy_pos = np.array([x, y, 0])
 
         # ── 1. 3D Axes ──
         axes = ThreeDAxes(
@@ -26,6 +24,12 @@ class CylindricalCoordinates(ThreeDScene):
         axis_labels = axes.get_axis_labels(
             MathTex("x"), MathTex("y"), MathTex("z")
         )
+
+        O = axes.c2p(0, 0, 0)
+        p_pos = axes.c2p(x, y, z)
+        xy_pos = axes.c2p(x, y, 0)
+        px = axes.c2p(x, 0, 0)
+        py = axes.c2p(0, y, 0)
 
         self.set_camera_orientation(phi=65 * DEGREES, theta=-45 * DEGREES)
         self.play(Create(axes), Write(axis_labels))
@@ -43,20 +47,20 @@ class CylindricalCoordinates(ThreeDScene):
         self.wait(0.5)
 
         # ── 3. Cartesian path: 3 along x → 4 parallel to y → 2 parallel to z ──
-        path_x = Line(ORIGIN, np.array([x, 0, 0]), color=BLUE, stroke_width=3)
-        path_y = Line(np.array([x, 0, 0]), np.array([x, y, 0]), color=BLUE, stroke_width=3)
-        path_z = Line(np.array([x, y, 0]), p_pos, color=BLUE, stroke_width=3)
+        path_x = Line(O, px, color=BLUE, stroke_width=3)
+        path_y = Line(px, xy_pos, color=BLUE, stroke_width=3)
+        path_z = Line(xy_pos, p_pos, color=BLUE, stroke_width=3)
 
         label_x = MathTex(f"{x}", color=BLUE).scale(0.6)
-        label_x.move_to(np.array([x * 0.5, -0.5, 0]))
+        label_x.move_to(axes.c2p(x * 0.5, -0.5, 0))
         self.add_fixed_orientation_mobjects(label_x)
 
         label_y = MathTex(f"{y}", color=BLUE).scale(0.6)
-        label_y.move_to(np.array([x + 0.5, y * 0.5, 0]))
+        label_y.move_to(axes.c2p(x + 0.5, y * 0.5, 0))
         self.add_fixed_orientation_mobjects(label_y)
 
         label_z = MathTex(f"{z}", color=BLUE).scale(0.6)
-        label_z.move_to(np.array([x + 0.5, y, z * 0.5]))
+        label_z.move_to(axes.c2p(x + 0.5, y, z * 0.5))
         self.add_fixed_orientation_mobjects(label_z)
 
         self.play(Create(path_x), Write(label_x), run_time=0.8)
@@ -97,13 +101,15 @@ class CylindricalCoordinates(ThreeDScene):
         self.play(Write(r_formula), run_time=1.5)
         self.wait(0.5)
 
-        r_scene = np.linalg.norm(axes.c2p(r_val, 0, 0) - axes.c2p(0, 0, 0))
-        circle = Circle(
-            radius=r_scene,
-            color=BLUE,
-            stroke_width=2,
-            stroke_opacity=0.6,
-        ).move_to(axes.c2p(0, 0, 0))
+        r_scene = np.linalg.norm(axes.c2p(r_val, 0, 0) - O)
+        circle = VGroup()
+        n = 60
+        for i in range(n):
+            a1 = 2 * PI * i / n
+            a2 = 2 * PI * (i + 1) / n
+            p1 = O + r_scene * np.array([np.cos(a1), np.sin(a1), 0])
+            p2 = O + r_scene * np.array([np.cos(a2), np.sin(a2), 0])
+            circle.add(Line(p1, p2, color=BLUE, stroke_width=2, stroke_opacity=0.6))
 
         self.play(Create(circle), run_time=1.5)
         self.wait(0.5)
@@ -130,22 +136,24 @@ class CylindricalCoordinates(ThreeDScene):
         angle_tracker = ValueTracker(0)
 
         growing_arc = always_redraw(
-            lambda: Arc(
-                radius=1.5,
-                angle=angle_tracker.get_value(),
-                color=GREEN,
-                stroke_width=4,
-            )
+            lambda: VGroup(*[
+                Line(
+                    axes.c2p(1.5 * np.cos(a), 1.5 * np.sin(a), 0),
+                    axes.c2p(1.5 * np.cos(a + 0.04), 1.5 * np.sin(a + 0.04), 0),
+                    color=GREEN, stroke_width=4,
+                )
+                for a in np.linspace(0, angle_tracker.get_value(), max(2, int(angle_tracker.get_value() / 0.04)))
+            ])
         )
 
         sweeping_line = always_redraw(
             lambda: Line(
-                ORIGIN,
-                np.array([
+                O,
+                axes.c2p(
                     r_val * np.cos(angle_tracker.get_value()),
                     r_val * np.sin(angle_tracker.get_value()),
                     0,
-                ]),
+                ),
                 color=BLUE,
                 stroke_width=4,
             )
@@ -161,11 +169,11 @@ class CylindricalCoordinates(ThreeDScene):
 
         mid_angle = theta_val / 2
         theta_label = MathTex(r"\theta", color=GREEN).scale(0.7)
-        theta_label.move_to(np.array([
+        theta_label.move_to(axes.c2p(
             2.0 * np.cos(mid_angle),
             2.0 * np.sin(mid_angle),
             0,
-        ]))
+        ))
         self.add_fixed_orientation_mobjects(theta_label)
         self.play(Write(theta_label))
         self.wait(1)
