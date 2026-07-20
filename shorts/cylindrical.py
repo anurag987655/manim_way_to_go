@@ -95,7 +95,7 @@ class CylindricalCoordinates(ThreeDScene):
             r"= \sqrt{" + f"{x}^2 + {y}^2" + r"}",
             r"= " + f"{r_val:.0f}",
             color=GOLD,
-        ).set_opacity(0.8)
+        ).scale(0.6).set_opacity(0.8)
         r_formula.to_edge(UP)
         self.add_fixed_in_frame_mobjects(r_formula)
         self.play(Write(r_formula), run_time=1.5)
@@ -127,7 +127,7 @@ class CylindricalCoordinates(ThreeDScene):
             r"= \arctan\left(\frac{" + f"{y}" + r"}{" + f"{x}" + r"}\right)",
             rf"\approx {theta_deg:.1f}^\circ",
             color=GOLD,
-        ).set_opacity(0.8)
+        ).scale(0.6).set_opacity(0.8)
         theta_formula.next_to(r_formula, DOWN, buff=0.3)
         self.add_fixed_in_frame_mobjects(theta_formula)
         self.play(Write(theta_formula), run_time=1.5)
@@ -198,9 +198,13 @@ class CylindricalCoordinates(ThreeDScene):
             f"({r_val:.0f},", r"\theta", f", {z})",
             color=GOLD,
         ).scale(0.7)
-        cylindrical_label.next_to(point_label, DOWN, buff=0.4)
+        cylindrical_label.move_to(point_label.get_center())
         self.add_fixed_orientation_mobjects(cylindrical_label)
-        self.play(Write(cylindrical_label), run_time=1)
+        self.play(
+            FadeOut(point_label),
+            Write(cylindrical_label),
+            run_time=1,
+        )
         self.wait(0.5)
 
         annotation = MathTex(
