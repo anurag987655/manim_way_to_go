@@ -15,14 +15,25 @@ class CylindricalCoordinates(ThreeDScene):
         r_val = np.sqrt(x**2 + y**2)
         theta_val = np.arctan2(y, x)
 
+        # ── 4. Question ──
+        question = Tex(
+            "How does $(3, 4, 2)$ map to\\\\cylindrical coordinates?",
+        )
+        question.set_color_by_gradient(BLUE, PURPLE, PINK)
+        question.to_edge(UP)
+        self.add_fixed_in_frame_mobjects(question)
+
+        self.play(Write(question), run_time=1.5)
+        self.wait(1)
+
         # ── 1. 3D Axes ──
         axes = ThreeDAxes(
             x_range=[-6, 6, 1],
             y_range=[-6, 6, 1],
             z_range=[-3, 4, 1],
-            x_length=9,
-            y_length=9,
-            z_length=7,
+            x_length=6,
+            y_length=6,
+            z_length=5,
         )
         axis_labels = axes.get_axis_labels(
             MathTex("x"), MathTex("y"), MathTex("z")
@@ -79,27 +90,16 @@ class CylindricalCoordinates(ThreeDScene):
         )
         self.wait(0.3)
 
-        # ── 4. Question ──
-        q_how = Tex("How does ", color=WHITE)
-        q_point = Tex(f"({x}, {y}, {z})", color=RED)
-        q_map = Tex(" map to cylindrical coordinates?", color=WHITE)
-        question = VGroup(q_how, q_point, q_map).arrange(RIGHT, buff=0.05)
-        question.to_edge(UP)
-        self.add_fixed_in_frame_mobjects(question)
 
-        self.play(Write(question), run_time=1.5)
-        self.wait(2)
-        self.play(FadeOut(question))
-        self.wait(0.3)
 
-        # ── 5. Compute r → draw circle on xy-plane ──
+        # ── 5. Compute r → draw circle ──
         r_formula = MathTex(
             r"r = \sqrt{x^2 + y^2}",
             r"= \sqrt{" + f"{x}^2 + {y}^2" + r"}",
             r"= " + f"{r_val:.0f}",
             color=GOLD,
-        ).scale(0.6).set_opacity(0.8)
-        r_formula.to_edge(UP)
+        ).scale(0.55).set_opacity(0.8)
+        r_formula.next_to(question, DOWN, buff=0.3)
         self.add_fixed_in_frame_mobjects(r_formula)
         self.play(Write(r_formula), run_time=1.5)
         self.wait(0.5)
@@ -123,18 +123,18 @@ class CylindricalCoordinates(ThreeDScene):
         self.play(Write(r_label_circle))
         self.wait(1)
 
-        # ── 6. Compute θ → arc + line sweep to xy-plane point ──
+        # ── 6. Compute θ → arc + sweep ──
         theta_deg = np.degrees(theta_val)
         theta_formula = MathTex(
             r"\theta = \arctan\left(\frac{y}{x}\right)",
             r"= \arctan\left(\frac{" + f"{y}" + r"}{" + f"{x}" + r"}\right)",
             rf"\approx {theta_deg:.1f}^\circ",
             color=GOLD,
-        ).scale(0.6).set_opacity(0.8)
-        theta_formula.next_to(r_formula, DOWN, buff=0.3)
+        ).scale(0.55).set_opacity(0.8)
+        theta_formula.next_to(r_formula, DOWN, buff=0.2)
         self.add_fixed_in_frame_mobjects(theta_formula)
         self.play(Write(theta_formula), run_time=1.5)
-        self.wait(0.5)
+        # ── 7. Arc + line sweep to xy-plane point ──
 
         angle_tracker = ValueTracker(0)
 
@@ -181,47 +181,42 @@ class CylindricalCoordinates(ThreeDScene):
         self.play(Write(theta_label))
         self.wait(1)
 
-        # ── 7. Vertical line: z units up from xy-plane to P ──
+        # ── 8. Vertical line: z units up from xy-plane to P ──
         vert_line = Line(xy_pos, p_pos, color=PURPLE, stroke_width=4)
         z_label = MathTex(f"z = {z}", color=PURPLE).scale(0.65)
         z_label.next_to(vert_line.get_center(), RIGHT, buff=0.15)
         self.add_fixed_orientation_mobjects(z_label)
 
         self.play(Create(vert_line), Write(z_label), run_time=1)
-        self.wait(1)
+        self.wait(0.5)
 
-        # ── 8. Reveal cylindrical coordinates ──
-        self.play(
-            FadeOut(r_formula),
-            FadeOut(theta_formula),
-            FadeOut(r_label_circle),
-        )
-
-        cylindrical_label = MathTex(
+        # Replace point label with cylindrical coordinates at point position
+        cyl_at_point = MathTex(
             f"({r_val:.0f},", r"\theta", f", {z})",
             color=GOLD,
         ).scale(0.7)
-        cylindrical_label.move_to(point_label.get_center())
-        self.add_fixed_orientation_mobjects(cylindrical_label)
+        cyl_at_point.move_to(point_label.get_center())
+        self.add_fixed_orientation_mobjects(cyl_at_point)
         self.play(
             FadeOut(point_label),
-            Write(cylindrical_label),
+            Write(cyl_at_point),
             run_time=1,
         )
-        self.wait(0.5)
+        self.wait(1)
+
 
         annotation = MathTex(
             r"(\underbrace{r}_{\text{radius}},"
             r"\underbrace{\theta}_{\text{angle}},"
             r"\underbrace{z}_{\text{height}})",
             color=GOLD,
-        ).scale(0.55)
-        annotation.to_edge(DOWN, buff=0.4)
+        ).scale(0.7)
+        annotation.next_to(axes, DOWN, buff=0.2)
         self.add_fixed_in_frame_mobjects(annotation)
         self.play(Write(annotation), run_time=1.5)
         self.wait(2)
 
-        # ── 9. Hold with gentle camera motion ──
+        # ── 10. Hold with gentle camera motion ──
         self.begin_ambient_camera_rotation(rate=0.2)
         self.wait(5)
         self.stop_ambient_camera_rotation()
