@@ -4,11 +4,26 @@ import numpy as np
 config.frame_rate = 60
 config.pixel_width = 1080
 config.pixel_height = 1920
+
+config.frame_width = 9
+config.frame_height = 16
+
+
 config.background_color = "#0E1117"
 
 
 class SphericalToRectangular(ThreeDScene):
     def construct(self):
+        # ── 0. Title ──
+        title = Text(
+            "Spherical Coordinates",
+            gradient=(BLUE, PURPLE, PINK),
+            font_size=60,
+        )
+        title.to_edge(UP)
+        self.add_fixed_in_frame_mobjects(title)
+        self.play(Write(title))
+
         # ── 1. Axes ──
         axes = ThreeDAxes(
             x_range=[-6, 6, 1],
@@ -91,11 +106,17 @@ class SphericalToRectangular(ThreeDScene):
         self.play(Create(r_line))
         self.wait(0.5)
 
+        r_label = MathTex("\\rho\\sin\\phi", color=PURPLE).scale(0.7)
+        r_label.move_to((ORIGIN + p_xy) / 2 + [0, -0.4, 0])
+        self.add_fixed_orientation_mobjects(r_label)
+        self.play(Write(r_label))
+        self.wait(0.5)
+
         # ── 8b. Z-axis projection ──
         p_z = np.array([0, 0, z])
         z_axis_line = DashedLine(p, p_z, color=BLUE, stroke_width=3)
         z_axis_label = MathTex("z = \\rho\\cos\\phi", color=BLUE).scale(0.7)
-        z_axis_label.move_to(p_z + [-0.5, -0.4, 0])
+        z_axis_label.move_to(p_z + [-1.0, -0.4, 0])
         self.add_fixed_orientation_mobjects(z_axis_label)
 
         self.play(Create(z_axis_line), Write(z_axis_label))
@@ -124,9 +145,9 @@ class SphericalToRectangular(ThreeDScene):
 
         x_label = MathTex(
             "x = \\rho\\sin\\phi\\cos\\theta",
-            color=MAROON,
+            color=RED,
         ).scale(0.55)
-        x_label.next_to(px, DOWN, buff=0.15)
+        x_label.move_to(px + [-2.0, 0, -0.7])
         self.add_fixed_orientation_mobjects(x_label)
 
         self.play(Create(x_line), Write(x_label))
@@ -156,7 +177,7 @@ class SphericalToRectangular(ThreeDScene):
             "y = \\rho\\sin\\phi\\sin\\theta,\\quad "
             "z = \\rho\\cos\\phi"
         ).scale(0.6)
-        summary.to_edge(DOWN)
+        summary.move_to(np.array([0, -4, 0]))
         self.add_fixed_in_frame_mobjects(summary)
         self.play(Write(summary))
         self.wait(1)

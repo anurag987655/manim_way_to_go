@@ -3,6 +3,9 @@ from manim import *
 config.frame_rate = 60
 config.pixel_width = 1080
 config.pixel_height = 1920
+config.frame_width = 9
+config.frame_height = 16
+
 config.background_color = "#0E1117"
 
 
