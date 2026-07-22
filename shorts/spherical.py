@@ -163,13 +163,13 @@ class SphericalToRectangular(ThreeDScene):
         self.play(Create(y_line), Write(y_label))
         self.wait(0.5)
 
-        # ── 10b. Highlight projected region ──
-        region = Polygon(
-            ORIGIN, np.array([x, 0, 0]), p_xy, np.array([0, y, 0]),
-            color=MAROON, fill_opacity=0.15, stroke_width=0,
-        )
-        self.play(Create(region))
-        self.wait(0.5)
+        # ── subtle rotation to show labels follow 3D ──
+        self.move_camera(phi=65 * DEGREES, theta=-65 * DEGREES, run_time=1.2)
+        self.wait(0.3)
+        self.move_camera(phi=65 * DEGREES, theta=-45 * DEGREES, run_time=1.2)
+        self.wait(0.3)
+
+        
 
         # ── 11. Summary formula ──
         summary = MathTex(
