@@ -15,7 +15,7 @@ config.background_color = "#0E1117"
 
 class Taylor(Scene):
     def construct(self):
-        head = Text("How close can polynomials get to eˣ?", color=BLUE_C).scale(0.85).to_edge(UP)
+        head = Text("How close can polynomials get to eˣ?", gradient=(BLUE_C, PURPLE_C)).scale(0.85).to_edge(UP)
         self.play(Write(head))
         self.wait(0.7)
 
@@ -49,7 +49,7 @@ class Taylor(Scene):
         scales = [1.0, 0.85, 0.7, 0.55, 0.45, 0.35]
         
         current_graph = axes.plot(lambda x: 1, x_range=[-2, 2], color=BLUE, stroke_width=3)
-        current_label = approximations[0].scale(scales[0]).next_to(current_graph.get_end(), RIGHT + UP, buff=0.1)
+        current_label = approximations[0].scale(scales[0]).next_to(current_graph.get_end(), UP, buff=0.1)
         self.play(Create(current_graph), Write(current_label))
         self.wait(1)
         
@@ -58,8 +58,8 @@ class Taylor(Scene):
             new_graph = axes.plot(func, x_range=[-2, 2], color=BLUE, stroke_width=3)
             new_label = approximations[i].scale(scales[i])
             if i <= 1:
-                new_label.next_to(new_graph.get_end(), RIGHT + UP, buff=0.1)
+                new_label.next_to(new_graph.get_end(), UP, buff=0.1)
             else:
-                new_label.next_to(new_graph.get_end(), DOWN, buff=0.1)
+                new_label.next_to(axes.c2p(2, 4), RIGHT, buff=0.1).shift(LEFT * 0.4)
             self.play(Transform(current_label, new_label), Transform(current_graph, new_graph))
             self.wait(1)
