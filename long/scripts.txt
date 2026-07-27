@@ -1,0 +1,53 @@
+**Imagine you're in a room.**
+
+How many people do you think you'd need before **two people are likely to share the same birthday?**
+
+A hundred?
+Fifty?
+Maybe even more?
+
+Surprisingly, you only need **23 people**.
+
+With just 23 people in a room, there's already about a **50% chance** that at least two people share the same birthday.
+
+Sounds impossible, right?
+
+This surprising result is called the **Birthday Paradox**.
+
+So why does this happen?
+
+Let's uncover the math behind the Birthday Paradox.
+
+Now let's generalize the problem.
+
+Suppose there are **(n)** people in a room.
+
+Our question is:
+
+**What's the probability that at least two people share the same birthday?**
+
+To keep things simple, let's assume a year has **365 days** and ignore leap years.
+
+Now, if **(n > 365)**, the answer is obvious.
+
+By the **Pigeonhole Principle**, at least two people **must** share the same birthday.
+
+The interesting case is when **(n < 365)**.
+
+At first glance, it seems we should calculate the probability that **some pair** has the same birthday.
+
+But that's surprisingly difficult.
+
+Instead, we'll solve the opposite problem.
+
+We'll first calculate the probability that **everyone has a different birthday**.
+
+Once we know that, finding the probability that **at least one pair shares a birthday** is easy.
+
+It's simply:
+
+[
+P(\text{at least one match}) = 1 - P(\text{no matches})
+]
+
+So let's begin by finding the probability that no two people share the same birthday.

@@ -1,6 +1,8 @@
 ## videos aim to show the birthday paradox...
 
 
+import random
+
 from manim import *
 
 class GenScene(Scene):
@@ -34,4 +36,41 @@ class GenScene(Scene):
         self.play(FadeOut(people_100), FadeOut(label_100), FadeOut(room))
         self.play(Write(birthday_paradox))
         self.play(birthday_paradox.animate.to_edge(UP))
+        self.wait(1)
+
+        # ---- Second part: explanation with arrows ----
+
+        room2 = Rectangle(width=6, height=4, color=WHITE).shift(DOWN)
+        n = 50
+        dots2 = VGroup(*[Dot(color=BLUE, radius=0.06) for _ in range(n)])
+        for dot in dots2:
+            dot.move_to(room2.get_center() + np.array([
+                random.uniform(-room2.width/2 + 0.2, room2.width/2 - 0.2),
+                random.uniform(-room2.height/2 + 0.2, room2.height/2 - 0.2),
+                0
+            ]))
+        label2 = Text(f"n People", color=WHITE).next_to(room2, UP)
+        self.play(FadeIn(room2), FadeIn(dots2), Write(label2))
+        self.wait(1)
+
+        group2 = VGroup(room2, dots2, label2)
+        self.play(group2.animate.scale(0.6).shift(UP * 1.1))
+        self.wait(0.5)
+
+        arrow1 = Arrow(start=DOWN * 0.5, end=ORIGIN, color=BLUE).next_to(room2, DOWN, buff=0).shift(LEFT * 1.5)
+        arrow2 = Arrow(start=DOWN * 0.5, end=ORIGIN, color=GREEN).next_to(room2, DOWN, buff=0).shift(RIGHT * 1.5)
+        self.play(GrowArrow(arrow1), GrowArrow(arrow2))
+        self.wait(0.5)
+
+        case1 = Text("Case i: n > 365", color=BLUE, font_size=24).next_to(arrow1, DOWN, buff=0.5)
+        prob1 = Text("P(match) = 1", color=BLUE, font_size=20).next_to(case1, DOWN, buff=0.25)
+        self.play(Write(case1))
         self.wait(2)
+        self.play(Write(prob1))
+        self.wait(2)
+
+        case2 = Text("Case ii: n < 365", color=GREEN, font_size=24).next_to(arrow2, DOWN, buff=0.5)
+        # wont be using 
+        # prob2 = MathTex(r"P = 1 - \frac{365!}{(365-n)! \cdot 365^n}", color=GREEN, font_size=28).next_to(case2, DOWN, buff=0.15)
+        self.play(Write(case2))
+        self.wait(3)
