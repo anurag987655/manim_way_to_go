@@ -74,3 +74,26 @@ class GenScene(Scene):
         # prob2 = MathTex(r"P = 1 - \frac{365!}{(365-n)! \cdot 365^n}", color=GREEN, font_size=28).next_to(case2, DOWN, buff=0.15)
         self.play(Write(case2))
         self.wait(3)
+
+        # ---- Third part: solving the equation ----
+
+        gold_rect = SurroundingRectangle(case2, color=GOLD, buff=0.15)
+        self.play(Create(gold_rect))
+
+        self.play(FadeOut(case1), FadeOut(prob1), FadeOut(arrow1), FadeOut(arrow2))
+        self.wait(0.3)
+
+        target_y = case2.get_center()[1]
+        self.play(
+            case2.animate.move_to([0, target_y, 0]),
+            gold_rect.animate.move_to([0, target_y, 0])
+        )
+        self.wait(1)
+
+        prob_label = MathTex(r"P(\text{no match}) =", color=WHITE, font_size=28).next_to(gold_rect, DOWN, buff=0.8).align_to(gold_rect, LEFT)
+        self.play(Write(prob_label))
+        self.wait(1)
+
+        room_group = VGroup(room2, dots2, label2)
+        self.play(room_group.animate.shift(LEFT * 3.5))
+        self.wait(0.5)
