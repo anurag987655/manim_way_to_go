@@ -190,3 +190,21 @@ class GenScene(Scene):
         self.play(Transform(frac, frac_dots))
         self.wait(1)
 
+        # ---- Eighth part: last person moves to calendar ----
+
+        all_on_cal = [person, person2, person3] + to_move
+        taken_centers = [d.get_center() for d in all_on_cal]
+        vacant = [c for c in cal_centers if not any(np.allclose(c, t) for t in taken_centers)]
+
+        target = random.choice(vacant)
+        self.play(stay.animate.move_to(target), run_time=2)
+        self.wait(0.5)
+
+        total = len(all_on_cal) + 1
+        final_frac = MathTex(
+            rf"\frac{{365}}{{365}} \times \frac{{364}}{{365}} \times \frac{{363}}{{365}} \times \cdots \times \frac{{365-(n-1)}}{{365}}",
+            color=WHITE, font_size=28
+        ).next_to(prob_label, RIGHT, buff=0.2)
+        self.play(Transform(frac, final_frac))
+        self.wait(1)
+
