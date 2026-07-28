@@ -106,3 +106,22 @@ class GenScene(Scene):
 
         cal_label = Text("365 days", color=WHITE,font_size=25).next_to(cal_days, UP, buff=0.1)
         self.play(Write(cal_label))
+        self.wait(2)
+
+        # ---- Fourth part: one person jumps through days ----
+
+        person = random.choice(dots2.submobjects)
+        person.set_color(YELLOW)
+
+        days_pos = [d.get_center() for d in cal_days.submobjects]
+        first = random.choice(days_pos)
+        jumps = random.choices(days_pos, k=6)
+        final = random.choice(days_pos)
+
+        self.play(person.animate.move_to(first).set_color(YELLOW), run_time=1.5)
+        for p in jumps:
+            self.play(person.animate.move_to(p), run_time=0.5)
+        self.play(person.animate.move_to(final), run_time=3)
+        self.wait(1)
+
+
