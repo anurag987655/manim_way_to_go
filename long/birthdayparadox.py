@@ -229,3 +229,26 @@ class GenScene(Scene):
         self.play(eq_group.animate.move_to(eq_target))
         self.wait(1)
 
+        # ---- Tenth part: match formula and table ----
+
+        match_label = MathTex(r"P(\text{match}) = 1 - P(\text{no match})", color=WHITE, font_size=24)
+        match_label.next_to(eq_group, DOWN, buff=0.4)
+        self.play(Write(match_label))
+        self.wait(1)
+
+        def p_match(n):
+            p = 1.0
+            for i in range(n):
+                p *= (365 - i) / 365
+            return 1 - p
+
+        ns = [1, 10, 15, 23, 50, 60]
+        rows = [["People", "P(match)"]]
+        for n in ns:
+            rows.append([str(n), f"{p_match(n):.4f}"])
+
+        table = Table(rows, include_outer_lines=True).scale(0.35)
+        table.next_to(match_label, DOWN, buff=0.4)
+        self.play(Create(table))
+        self.wait(2)
+
