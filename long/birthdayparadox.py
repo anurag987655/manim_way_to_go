@@ -171,5 +171,22 @@ class GenScene(Scene):
         self.play(Transform(frac, new_frac2))
         self.wait(1)
 
+        # ---- Seventh part: move everyone to calendar ----
 
+        on_cal = [person, person2, person3]
+        cal_centers = [d.get_center() for d in cal_days.submobjects]
+        taken = [p.get_center() for p in on_cal]
+        empty = [c for c in cal_centers if not any(np.allclose(c, t) for t in taken)]
+
+        rest = [d for d in dots2.submobjects if d not in on_cal]
+        to_move = rest[:-1]
+        stay = rest[-1]
+
+        positions = random.sample(empty, len(to_move))
+        for d, pos in zip(to_move, positions):
+            self.play(d.animate.move_to(pos), run_time=0.25)
+
+        frac_dots = MathTex(r"\frac{365}{365} \times \frac{364}{365} \times \frac{363}{365} \times \cdots", color=WHITE, font_size=28).next_to(prob_label, RIGHT, buff=0.2)
+        self.play(Transform(frac, frac_dots))
+        self.wait(1)
 
