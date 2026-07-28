@@ -252,3 +252,38 @@ class GenScene(Scene):
         self.play(Create(table))
         self.wait(2)
 
+        # ---- Eleventh part: graph ----
+
+        self.play(FadeOut(eq_group), FadeOut(match_label))
+        self.play(table.animate.next_to(gold_rect, DOWN, buff=0.3).shift(LEFT * 3))
+        self.wait(0.5)
+
+        axes = Axes(
+            x_range=[0, 110, 10],
+            y_range=[0, 1.1, 0.1],
+            x_length=5.5,
+            y_length=3,
+            axis_config={"color": WHITE},
+        )
+        axes.next_to(gold_rect, DOWN, buff=0.5).shift(RIGHT * 2.5)
+        axes.add_coordinates()
+
+        x_label = Text("People (n)", font_size=18).next_to(axes.get_x_axis(), RIGHT, buff=0.3)
+        y_label = Text("Probability (P)", font_size=18).next_to(axes.get_y_axis(), UP, buff=0.1)
+
+        self.play(Create(axes), Write(x_label), Write(y_label))
+        self.wait(0.5)
+
+        def p_curve(x):
+            n = int(x)
+            if n <= 0:
+                return 0
+            p = 1.0
+            for i in range(n):
+                p *= (365 - i) / 365
+            return 1 - p
+
+        graph = axes.plot(p_curve, x_range=[1, 100], color=GOLD)
+        self.play(Create(graph), run_time=3)
+        self.wait(2)
+
