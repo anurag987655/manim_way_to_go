@@ -149,4 +149,27 @@ class GenScene(Scene):
         self.play(Transform(frac, new_frac))
         self.wait(1)
 
+        # ---- Sixth part: third person, then shuffle all ----
+
+        occupied = [final, final2]
+        available3 = [p for p in days_pos if not any(np.allclose(p, o) for o in occupied)]
+
+        person3 = random.choice([d for d in dots2.submobjects if d not in (person, person2)])
+        person3.set_color(RED)
+
+        first3 = random.choice(available3)
+        jumps3 = random.choices(available3, k=6)
+        final3 = random.choice(available3)
+
+        self.play(person3.animate.move_to(first3).set_color(RED), run_time=0.8)
+        for p in jumps3:
+            self.play(person3.animate.move_to(p), run_time=0.12)
+        self.play(person3.animate.move_to(final3), run_time=0.4)
+        self.wait(0.5)
+
+        new_frac2 = MathTex(r"\frac{365}{365} \times \frac{364}{365} \times \frac{363}{365}", color=WHITE, font_size=28).next_to(prob_label, RIGHT, buff=0.2)
+        self.play(Transform(frac, new_frac2))
+        self.wait(1)
+
+
 
