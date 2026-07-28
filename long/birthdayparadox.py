@@ -124,4 +124,29 @@ class GenScene(Scene):
         self.play(person.animate.move_to(final), run_time=3)
         self.wait(1)
 
+        # ---- Fifth part: probability tracking ----
+
+        frac = MathTex(r"\frac{365}{365}", color=WHITE, font_size=28).next_to(prob_label, RIGHT, buff=0.2)
+        self.play(Write(frac))
+        self.wait(1)
+
+        available = [p for p in days_pos if not np.allclose(p, final)]
+
+        person2 = random.choice([d for d in dots2.submobjects if d is not person])
+        person2.set_color(ORANGE)
+
+        first2 = random.choice(available)
+        jumps2 = random.choices(available, k=6)
+        final2 = random.choice(available)
+
+        self.play(person2.animate.move_to(first2).set_color(ORANGE), run_time=0.8)
+        for p in jumps2:
+            self.play(person2.animate.move_to(p), run_time=0.12)
+        self.play(person2.animate.move_to(final2), run_time=0.4)
+        self.wait(0.5)
+
+        new_frac = MathTex(r"\frac{365}{365} \times \frac{364}{365}", color=WHITE, font_size=28).next_to(prob_label, RIGHT, buff=0.2)
+        self.play(Transform(frac, new_frac))
+        self.wait(1)
+
 
