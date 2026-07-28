@@ -97,3 +97,12 @@ class GenScene(Scene):
         room_group = VGroup(room2, dots2, label2)
         self.play(room_group.animate.shift(LEFT * 3.5))
         self.wait(0.5)
+
+        cal_days = VGroup(*[Square(side_length=0.15, color=GREY, fill_opacity=0.25) for _ in range(365)])
+        cal_days.arrange_in_grid(cols=15, cell_size=(0.2, 0.2), buff=0.02)
+        cal_days.move_to(RIGHT * 3.2 )
+        self.play(FadeIn(cal_days, shift=UP, lag_ratio=0.01))
+        self.wait(0.5)
+
+        cal_label = Text("365 days", color=WHITE,font_size=25).next_to(cal_days, UP, buff=0.1)
+        self.play(Write(cal_label))
