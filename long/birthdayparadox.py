@@ -208,3 +208,24 @@ class GenScene(Scene):
         self.play(Transform(frac, final_frac))
         self.wait(1)
 
+        # ---- Ninth part: cleanup and refocus ----
+
+        self.play(
+            FadeOut(room2), FadeOut(label2), FadeOut(cal_days), FadeOut(cal_label),
+            FadeOut(dots2)
+        )
+        self.wait(0.5)
+
+        title_bottom = birthday_paradox.get_bottom()[1]
+        case2_target = [0, title_bottom - 0.5, 0]
+        self.play(
+            case2.animate.move_to(case2_target),
+            gold_rect.animate.move_to(case2_target)
+        )
+        self.wait(0.5)
+
+        eq_group = VGroup(prob_label, frac)
+        eq_target = gold_rect.get_center() + DOWN * 0.9
+        self.play(eq_group.animate.move_to(eq_target))
+        self.wait(1)
+
