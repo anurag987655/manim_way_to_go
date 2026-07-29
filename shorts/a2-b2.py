@@ -136,15 +136,30 @@ class formula1(Scene):
         self.play(Write(label_ab_bottom))
         self.wait(0.5)
 
-        self.play(FadeOut(right_seg), FadeOut(bottom_seg))
-        self.wait(0.5)
-
         right_bottom_ticks_a = VGroup(ticks_a[2], ticks_a[3], ticks_a[6], ticks_a[7])
-        self.play(FadeOut(right_bottom_ticks_a))
-        self.wait(0.1)
-
         right_bottom_ticks_b = VGroup(ticks_b[1], ticks_b[3])
-        self.play(FadeOut(right_bottom_ticks_b))
+        self.play(FadeOut(right_bottom_ticks_a), FadeOut(right_bottom_ticks_b))
+        self.wait(0.3)
+
+        l_left = Line([lx, by, 0], [lx, ty, 0], color=BLUE, stroke_width=5)
+        l_top = Line([lx, ty, 0], [rx, ty, 0], color=BLUE, stroke_width=5)
+        l_right = Line([rx, ty, 0], [rx, by2, 0], color=BLUE, stroke_width=5)
+        l_b_top = Line([rx, by2, 0], [bx, by2, 0], color=BLUE, stroke_width=5)
+        l_b_left = Line([bx, by2, 0], [bx, by, 0], color=BLUE, stroke_width=5)
+        l_bottom = Line([bx, by, 0], [lx, by, 0], color=BLUE, stroke_width=5)
+        l_shape = VGroup(l_left, l_top, l_right, l_b_top, l_b_left, l_bottom)
+
+        self.play(Create(l_shape), run_time=1.5)
+        self.wait(0.2)
+
+        hollow_fill = Polygon(
+            [lx, ty, 0], [rx, ty, 0], [rx, by2, 0],
+            [bx, by2, 0], [bx, by, 0], [lx, by, 0],
+            color=BLUE, fill_opacity=0.3, stroke_width=0
+        )
+        self.play(FadeIn(hollow_fill), run_time=0.5)
+        self.wait(0.3)
+        self.play(FadeOut(square_a), FadeOut(square_b), run_time=1)
         self.wait(1)
 
         
