@@ -72,6 +72,14 @@ class formula1(Scene):
         self.play(ticks_a.animate.set_stroke(opacity=1), run_time=0.5)
         self.wait(0.3)
 
+        area_label_a = MathTex(r"\textbf{Area} = \mathbf{a}^2", font_size=42)
+        area_label_a.set_color_by_gradient("#FF4500", "#FFD700", "#FF69B4")
+        area_label_a.move_to(square_a.get_center())
+        self.play(Write(area_label_a))
+        self.wait(0.5)
+        self.play(FadeOut(area_label_a))
+        self.wait(0.2)
+
         b = a * 0.5
         square_b = Square(side_length=b, color=RED, fill_opacity=0.3)
         square_b.align_to(square_a, DOWN)
@@ -84,6 +92,14 @@ class formula1(Scene):
 
         self.play(Create(square_b), Write(label_b), run_time=0.8)
         self.play(ticks_b.animate.set_stroke(opacity=1), run_time=0.4)
+        self.wait(0.3)
+
+        area_label_b = MathTex(r"\textbf{Area} = \mathbf{b}^2", font_size=34)
+        area_label_b.set_color_by_gradient("#0E52DA", "#00E5FF", "#00FF88")
+        area_label_b.move_to(square_b.get_center())
+        self.play(Write(area_label_b))
+        self.wait(0.5)
+        self.play(FadeOut(area_label_b))
         self.wait(1)
 
         

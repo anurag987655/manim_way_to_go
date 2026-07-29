@@ -10,8 +10,8 @@ config.background_color = "#0E1117"
 
 class InfiniteGeometricSeries(Scene):
     def construct(self):
-        t1 = Text("Infinite Geometric", gradient=(BLUE_D, "#00FFFF"), font_size=44)
-        t2 = Text("Series", gradient=(BLUE_D, "#00FFFF"), font_size=44)
+        t1 = Text("Infinite Geometric", gradient=(BLUE,PURPLE,PINK), font_size=44)
+        t2 = Text("Series", gradient=(BLUE,PURPLE, PINK), font_size=44)
         title = VGroup(t1, t2).arrange(DOWN, buff=0.05)
         title.to_edge(UP, buff=0.6)
         self.add(title)
