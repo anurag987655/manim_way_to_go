@@ -100,6 +100,43 @@ class formula1(Scene):
         self.play(Write(area_label_b))
         self.wait(0.5)
         self.play(FadeOut(area_label_b))
+        self.wait(0.3)
+
+        c = square_a.get_center()
+        lx = c[0] - a / 2
+        rx = c[0] + a / 2
+        by = c[1] - a / 2
+        ty = c[1] + a / 2
+        bx = rx - b
+        by2 = by + b
+
+        right_seg = Line(
+            [rx, by2, 0], [rx, ty, 0],
+            color="#FFD700", stroke_width=8
+        )
+        label_ab_right = MathTex("a-b", font_size=36)
+        label_ab_right.set_color_by_gradient("#FF4500", "#FFD700")
+        label_ab_right.next_to(right_seg, RIGHT, buff=0.15)
+
+        self.play(Create(right_seg))
+        self.wait(0.3)
+        self.play(Write(label_ab_right))
+        self.wait(0.5)
+
+        bottom_seg = Line(
+            [lx, by, 0], [bx, by, 0],
+            color="#00E5FF", stroke_width=8
+        )
+        label_ab_bottom = MathTex("a-b", font_size=36)
+        label_ab_bottom.set_color_by_gradient("#00E5FF", "#00FF88")
+        label_ab_bottom.next_to(bottom_seg, DOWN, buff=0.15)
+
+        self.play(Create(bottom_seg))
+        self.wait(0.3)
+        self.play(Write(label_ab_bottom))
+        self.wait(0.5)
+
+        self.play(FadeOut(right_seg), FadeOut(bottom_seg))
         self.wait(1)
 
         
