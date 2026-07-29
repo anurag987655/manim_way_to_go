@@ -163,7 +163,7 @@ class formula1(Scene):
 
         area_label_hollow = MathTex(r"\textbf{Area} = \mathbf{a}^2 - \mathbf{b}^2", font_size=36)
         area_label_hollow.set_color_by_gradient("#FF4500", "#FFD700", "#FF69B4")
-        area_label_hollow.move_to([c[0] - b / 2 + 0.5, c[1] + 0.5, 0])
+        area_label_hollow.move_to([c[0] - b / 2 + 0.7, c[1] + 0.7, 0])
         self.play(Write(area_label_hollow))
         self.wait(0.5)
         self.play(FadeOut(area_label_hollow))
@@ -202,8 +202,8 @@ class formula1(Scene):
         nt_l1 = Line([lx - lo + a / 2 - tof, by - buff - tlk / 2, 0], [lx - lo + a / 2 - tof, by - buff + tlk / 2, 0], color=BLUE, stroke_width=4)
         nt_l2 = Line([lx - lo + a / 2 + tof, by - buff - tlk / 2, 0], [lx - lo + a / 2 + tof, by - buff + tlk / 2, 0], color=BLUE, stroke_width=4)
         nt_r = Line([lx - lo + a + b / 2, by - buff - tlk / 2, 0], [lx - lo + a + b / 2, by - buff + tlk / 2, 0], color=BLUE, stroke_width=4)
-        nl_1 = Line([lx - lo - tlk / 2, by - buff - (a - b) / 2 - tof, 0], [lx - lo + tlk / 2, by - buff - (a - b) / 2 - tof, 0], color=BLUE, stroke_width=4)
-        nl_2 = Line([lx - lo - tlk / 2, by - buff - (a - b) / 2 + tof, 0], [lx - lo + tlk / 2, by - buff - (a - b) / 2 + tof, 0], color=BLUE, stroke_width=4)
+        nbl_1 = Line([lx - lo + (a - b) / 2 - tof, by - buff - (a - b) - tlk / 2, 0], [lx - lo + (a - b) / 2 - tof, by - buff - (a - b) + tlk / 2, 0], color=BLUE, stroke_width=4)
+        nbl_2 = Line([lx - lo + (a - b) / 2 + tof, by - buff - (a - b) - tlk / 2, 0], [lx - lo + (a - b) / 2 + tof, by - buff - (a - b) + tlk / 2, 0], color=BLUE, stroke_width=4)
         nbr = Line([lx - lo + (a - b) + b / 2, by - buff - (a - b) - tlk / 2, 0], [lx - lo + (a - b) + b / 2, by - buff - (a - b) + tlk / 2, 0], color=BLUE, stroke_width=4)
 
         self.play(Transform(l_top, t_top_l), Transform(ticks_a[0], nt_l1), Transform(ticks_a[1], nt_l2), label_a.animate.move_to(la_t), run_time=0.7)
@@ -212,11 +212,11 @@ class formula1(Scene):
         self.wait(0.15)
         self.play(Transform(l_right, t_right), label_ab_right.animate.move_to(lab_r_t), run_time=0.7)
         self.wait(0.15)
-        self.play(Transform(l_bottom, t_bot_l), run_time=0.7)
+        self.play(Transform(l_left, t_bot_l), Transform(ticks_a[4], nbl_1), Transform(ticks_a[5], nbl_2), run_time=0.7)
         self.wait(0.15)
         self.play(Transform(l_b_left, t_bot_r), Transform(ticks_b[2], nbr), run_time=0.7)
         self.wait(0.15)
-        self.play(Transform(l_left, t_left), Transform(ticks_a[4], nl_1), Transform(ticks_a[5], nl_2), label_ab_bottom.animate.move_to(lab_l_t), run_time=0.7)
+        self.play(Transform(l_bottom, t_left), label_ab_bottom.animate.move_to(lab_l_t), run_time=0.7)
         self.wait(0.3)
 
         label_apb = MathTex("a+b", font_size=36, color=BLUE)
