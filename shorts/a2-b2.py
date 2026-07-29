@@ -165,11 +165,9 @@ class formula1(Scene):
         area_label_hollow.set_color_by_gradient("#FF4500", "#FFD700", "#FF69B4")
         area_label_hollow.move_to([c[0] - b / 2 + 0.7, c[1] + 0.7, 0])
         self.play(Write(area_label_hollow))
-        self.wait(0.5)
-        self.play(FadeOut(area_label_hollow))
-        self.wait(0.3)
+        self.wait(0.8)
 
-        buff = 1.0
+        buff = 1.8
         lo = 1.1
         target_fill = Polygon(
             [lx - lo, by - buff, 0], [lx - lo + a + b, by - buff, 0],
@@ -194,7 +192,26 @@ class formula1(Scene):
         lab_r_t = label_ab_right.copy().next_to(t_right, RIGHT, buff=0.15).get_center()
         lab_l_t = label_ab_bottom.copy().next_to(t_left, LEFT, buff=0.15).get_center()
 
-        self.play(Transform(hollow_fill, target_fill), run_time=1.2)
+        # copies to keep L-shape intact while transforming
+        c_hollow_fill = hollow_fill.copy()
+        c_l_top = l_top.copy()
+        c_l_b_top = l_b_top.copy()
+        c_l_right = l_right.copy()
+        c_l_left = l_left.copy()
+        c_l_b_left = l_b_left.copy()
+        c_l_bottom = l_bottom.copy()
+        c_ticks_a0 = ticks_a[0].copy()
+        c_ticks_a1 = ticks_a[1].copy()
+        c_ticks_a4 = ticks_a[4].copy()
+        c_ticks_a5 = ticks_a[5].copy()
+        c_ticks_b0 = ticks_b[0].copy()
+        c_ticks_b2 = ticks_b[2].copy()
+        c_label_a = label_a.copy()
+        c_label_b = label_b.copy()
+        c_label_ab_right = label_ab_right.copy()
+        c_label_ab_bottom = label_ab_bottom.copy()
+
+        self.play(Transform(c_hollow_fill, target_fill), run_time=1.2)
         self.wait(0.2)
 
         tlk = dash_len
@@ -206,17 +223,17 @@ class formula1(Scene):
         nbl_2 = Line([lx - lo + (a - b) / 2 + tof, by - buff - (a - b) - tlk / 2, 0], [lx - lo + (a - b) / 2 + tof, by - buff - (a - b) + tlk / 2, 0], color=BLUE, stroke_width=4)
         nbr = Line([lx - lo + (a - b) + b / 2, by - buff - (a - b) - tlk / 2, 0], [lx - lo + (a - b) + b / 2, by - buff - (a - b) + tlk / 2, 0], color=BLUE, stroke_width=4)
 
-        self.play(Transform(l_top, t_top_l), Transform(ticks_a[0], nt_l1), Transform(ticks_a[1], nt_l2), label_a.animate.move_to(la_t), run_time=0.7)
+        self.play(Transform(c_l_top, t_top_l), Transform(c_ticks_a0, nt_l1), Transform(c_ticks_a1, nt_l2), c_label_a.animate.move_to(la_t), run_time=0.7)
         self.wait(0.15)
-        self.play(Transform(l_b_top, t_top_r), Transform(ticks_b[0], nt_r), label_b.animate.move_to(lb_t), run_time=0.7)
+        self.play(Transform(c_l_b_top, t_top_r), Transform(c_ticks_b0, nt_r), c_label_b.animate.move_to(lb_t), run_time=0.7)
         self.wait(0.15)
-        self.play(Transform(l_right, t_right), label_ab_right.animate.move_to(lab_r_t), run_time=0.7)
+        self.play(Transform(c_l_right, t_right), c_label_ab_right.animate.move_to(lab_r_t), run_time=0.7)
         self.wait(0.15)
-        self.play(Transform(l_left, t_bot_l), Transform(ticks_a[4], nbl_1), Transform(ticks_a[5], nbl_2), run_time=0.7)
+        self.play(Transform(c_l_left, t_bot_l), Transform(c_ticks_a4, nbl_1), Transform(c_ticks_a5, nbl_2), run_time=0.7)
         self.wait(0.15)
-        self.play(Transform(l_b_left, t_bot_r), Transform(ticks_b[2], nbr), run_time=0.7)
+        self.play(Transform(c_l_b_left, t_bot_r), Transform(c_ticks_b2, nbr), run_time=0.7)
         self.wait(0.15)
-        self.play(Transform(l_bottom, t_left), label_ab_bottom.animate.move_to(lab_l_t), run_time=0.7)
+        self.play(Transform(c_l_bottom, t_left), c_label_ab_bottom.animate.move_to(lab_l_t), run_time=0.7)
         self.wait(0.3)
 
         label_apb = MathTex("a+b", font_size=36, color=BLUE)
