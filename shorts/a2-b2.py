@@ -158,8 +158,17 @@ class formula1(Scene):
             color=BLUE, fill_opacity=0.3, stroke_width=0
         )
         self.play(FadeIn(hollow_fill), run_time=0.5)
-        self.wait(0.3)
         self.play(FadeOut(square_a), FadeOut(square_b), run_time=1)
+        self.wait(0.3)
+
+        area_label_hollow = MathTex(r"\textbf{Area} = \mathbf{a}^2 - \mathbf{b}^2", font_size=36)
+        area_label_hollow.set_color_by_gradient("#FF4500", "#FFD700", "#FF69B4")
+        area_label_hollow.move_to([c[0] - b / 2 + 0.5, c[1] + 0.5, 0])
+        self.play(Write(area_label_hollow))
+        self.wait(0.5)
+        self.play(FadeOut(area_label_hollow))
+
+        
         self.wait(1)
 
         
