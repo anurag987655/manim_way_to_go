@@ -158,7 +158,7 @@ class formula1(Scene):
             color=BLUE, fill_opacity=0.3, stroke_width=0
         )
         self.play(FadeIn(hollow_fill), run_time=0.5)
-        self.play(FadeOut(square_a), FadeOut(square_b), run_time=1)
+        self.play(FadeOut(square_a), FadeOut(square_b), FadeOut(right_seg), FadeOut(bottom_seg), run_time=1)
         self.wait(0.3)
 
         area_label_hollow = MathTex(r"\textbf{Area} = \mathbf{a}^2 - \mathbf{b}^2", font_size=36)
@@ -167,8 +167,68 @@ class formula1(Scene):
         self.play(Write(area_label_hollow))
         self.wait(0.5)
         self.play(FadeOut(area_label_hollow))
+        self.wait(0.3)
 
-        
-        self.wait(1)
+        buff = 1.0
+        lo = 1.1
+        target_fill = Polygon(
+            [lx - lo, by - buff, 0], [lx - lo + a + b, by - buff, 0],
+            [lx - lo + a + b, by - buff - (a - b), 0], [lx - lo, by - buff - (a - b), 0],
+            color=BLUE, fill_opacity=0.3, stroke_width=0
+        )
+        t_top_l = Line([lx - lo, by - buff, 0], [lx - lo + a, by - buff, 0], color=BLUE, stroke_width=5)
+        t_top_r = Line([lx - lo + a, by - buff, 0], [lx - lo + a + b, by - buff, 0], color=BLUE, stroke_width=5)
+        t_right = Line([lx - lo + a + b, by - buff, 0], [lx - lo + a + b, by - buff - (a - b), 0], color=BLUE, stroke_width=5)
+        t_bot_l = Line([lx - lo, by - buff - (a - b), 0], [lx - lo + (a - b), by - buff - (a - b), 0], color=BLUE, stroke_width=5)
+        t_bot_r = Line([lx - lo + (a - b), by - buff - (a - b), 0], [lx - lo + a + b, by - buff - (a - b), 0], color=BLUE, stroke_width=5)
+        t_left = Line([lx - lo, by - buff - (a - b), 0], [lx - lo, by - buff, 0], color=BLUE, stroke_width=5)
+
+        d_top = t_top_l.get_center() - l_top.get_center()
+        d_top_r = t_top_r.get_center() - l_b_top.get_center()
+        d_right = t_right.get_center() - l_right.get_center()
+        d_bot_l = t_bot_l.get_center() - l_bottom.get_center()
+        d_bot_r = t_bot_r.get_center() - l_b_left.get_center()
+
+        la_t = label_a.copy().next_to(t_top_l, UP, buff=0.15).get_center()
+        lb_t = label_b.copy().next_to(t_top_r, UP, buff=0.15).get_center()
+        lab_r_t = label_ab_right.copy().next_to(t_right, RIGHT, buff=0.15).get_center()
+        lab_l_t = label_ab_bottom.copy().next_to(t_left, LEFT, buff=0.15).get_center()
+
+        self.play(Transform(hollow_fill, target_fill), run_time=1.2)
+        self.wait(0.2)
+
+        tlk = dash_len
+        tof = offset_a
+        nt_l1 = Line([lx - lo + a / 2 - tof, by - buff - tlk / 2, 0], [lx - lo + a / 2 - tof, by - buff + tlk / 2, 0], color=BLUE, stroke_width=4)
+        nt_l2 = Line([lx - lo + a / 2 + tof, by - buff - tlk / 2, 0], [lx - lo + a / 2 + tof, by - buff + tlk / 2, 0], color=BLUE, stroke_width=4)
+        nt_r = Line([lx - lo + a + b / 2, by - buff - tlk / 2, 0], [lx - lo + a + b / 2, by - buff + tlk / 2, 0], color=BLUE, stroke_width=4)
+        nl_1 = Line([lx - lo - tlk / 2, by - buff - (a - b) / 2 - tof, 0], [lx - lo + tlk / 2, by - buff - (a - b) / 2 - tof, 0], color=BLUE, stroke_width=4)
+        nl_2 = Line([lx - lo - tlk / 2, by - buff - (a - b) / 2 + tof, 0], [lx - lo + tlk / 2, by - buff - (a - b) / 2 + tof, 0], color=BLUE, stroke_width=4)
+        nbr = Line([lx - lo + (a - b) + b / 2, by - buff - (a - b) - tlk / 2, 0], [lx - lo + (a - b) + b / 2, by - buff - (a - b) + tlk / 2, 0], color=BLUE, stroke_width=4)
+
+        self.play(Transform(l_top, t_top_l), Transform(ticks_a[0], nt_l1), Transform(ticks_a[1], nt_l2), label_a.animate.move_to(la_t), run_time=0.7)
+        self.wait(0.15)
+        self.play(Transform(l_b_top, t_top_r), Transform(ticks_b[0], nt_r), label_b.animate.move_to(lb_t), run_time=0.7)
+        self.wait(0.15)
+        self.play(Transform(l_right, t_right), label_ab_right.animate.move_to(lab_r_t), run_time=0.7)
+        self.wait(0.15)
+        self.play(Transform(l_bottom, t_bot_l), run_time=0.7)
+        self.wait(0.15)
+        self.play(Transform(l_b_left, t_bot_r), Transform(ticks_b[2], nbr), run_time=0.7)
+        self.wait(0.15)
+        self.play(Transform(l_left, t_left), Transform(ticks_a[4], nl_1), Transform(ticks_a[5], nl_2), label_ab_bottom.animate.move_to(lab_l_t), run_time=0.7)
+        self.wait(0.3)
+
+        label_apb = MathTex("a+b", font_size=36, color=BLUE)
+        label_apb.next_to(t_top_l, UP, buff=0.1)
+        label_apb.shift(RIGHT * b / 2)
+        self.play(Write(label_apb))
+        self.wait(0.3)
+
+        area_rect = MathTex(r"\textbf{Area} = (\mathbf{a} + \mathbf{b})(\mathbf{a} - \mathbf{b})", font_size=36)
+        area_rect.set_color_by_gradient("#FF4500", "#FFD700", "#FF69B4")
+        area_rect.move_to([lx - lo + (a + b) / 2, by - buff - (a - b) / 2, 0])
+        self.play(Write(area_rect))
+        self.wait(2)
 
         
