@@ -137,6 +137,14 @@ class formula1(Scene):
         self.wait(0.5)
 
         self.play(FadeOut(right_seg), FadeOut(bottom_seg))
+        self.wait(0.5)
+
+        right_bottom_ticks_a = VGroup(ticks_a[2], ticks_a[3], ticks_a[6], ticks_a[7])
+        self.play(FadeOut(right_bottom_ticks_a))
+        self.wait(0.1)
+
+        right_bottom_ticks_b = VGroup(ticks_b[1], ticks_b[3])
+        self.play(FadeOut(right_bottom_ticks_b))
         self.wait(1)
 
         
