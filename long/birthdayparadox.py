@@ -266,7 +266,8 @@ class GenScene(Scene):
             axis_config={"color": WHITE},
         )
         axes.next_to(gold_rect, DOWN, buff=0.5).shift(RIGHT * 2.5)
-        axes.add_coordinates()
+        axes.add_coordinates(font_size=18)
+        
 
         x_label = Text("People (n)", font_size=18).next_to(axes.get_x_axis(), RIGHT, buff=0.3)
         y_label = Text("Probability (P)", font_size=18).next_to(axes.get_y_axis(), UP, buff=0.1)
