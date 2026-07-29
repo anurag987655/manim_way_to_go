@@ -285,6 +285,14 @@ class GenScene(Scene):
             return 1 - p
 
         graph = axes.plot(p_curve, x_range=[1, 100], color=GOLD)
+
+        p1_line = DashedLine(
+            axes.c2p(0, 1), axes.c2p(110, 1),
+            color=YELLOW, stroke_width=2, dash_length=0.1
+        )
+        p1_label = Text("P = 1", font_size=16, color=YELLOW).next_to(p1_line, RIGHT, buff=0.1)
+
         self.play(Create(graph), run_time=3)
+        self.play(Create(p1_line), Write(p1_label))
         self.wait(2)
 
