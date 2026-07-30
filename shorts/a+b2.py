@@ -36,7 +36,7 @@ class Formula1(Scene):
         stroke_w = 4
 
         # ── 3. Big Square ──
-        big_sq = Square(side_length=s, color=BLUE, fill_opacity=0.3)
+        big_sq = Square(side_length=s, color=RED, fill_opacity=0.15)
         big_sq.next_to(formula, DOWN, buff=1.5)
         c = big_sq.get_center()
         lx = c[0] - s / 2
@@ -122,7 +122,7 @@ class Formula1(Scene):
         self.wait(0.2)
 
         h_div = Line(
-            [lx, by + a, 0], [rx, by + a, 0],
+            [lx, by + b, 0], [rx, by + b, 0],
             color="#FFD700", stroke_width=6,
         )
 
@@ -130,54 +130,54 @@ class Formula1(Scene):
         self.wait(0.3)
 
         # ── 7. Highlight each region ──
-        # a² region
+        # a² region (top-left)
         a2_fill = Polygon(
-            [lx, by, 0], [lx + a, by, 0],
-            [lx + a, by + a, 0], [lx, by + a, 0],
+            [lx, by + b, 0], [lx + a, by + b, 0],
+            [lx + a, ty, 0], [lx, ty, 0],
             color=BLUE, fill_opacity=0.6, stroke_width=0,
         )
         lab_a2 = MathTex(r"\text{Area} = \mathbf{a}^2", font_size=38)
         lab_a2.set_color_by_gradient("#FF4500", "#FFD700", "#FF69B4")
-        lab_a2.move_to([lx + a / 2, by + a / 2, 0])
+        lab_a2.move_to([lx + a / 2, by + b + a / 2, 0])
 
         self.play(FadeIn(a2_fill), Write(lab_a2), run_time=0.8)
         self.wait(0.8)
 
-        # ab region (bottom-right)
+        # ab region (bottom-left)
         ab1_fill = Polygon(
-            [lx + a, by, 0], [rx, by, 0],
-            [rx, by + a, 0], [lx + a, by + a, 0],
+            [lx, by, 0], [lx + a, by, 0],
+            [lx + a, by + b, 0], [lx, by + b, 0],
             color=GREEN, fill_opacity=0.6, stroke_width=0,
         )
         lab_ab1 = MathTex(r"\text{Area} = \mathbf{ab}", font_size=28)
         lab_ab1.set_color_by_gradient("#00E5FF", "#00FF88")
-        lab_ab1.move_to([lx + a + b / 2, by + a / 2, 0])
+        lab_ab1.move_to([lx + a / 2, by + b / 2, 0])
 
         self.play(FadeIn(ab1_fill), Write(lab_ab1), run_time=0.8)
         self.wait(0.8)
 
-        # ab region (top-left)
+        # ab region (top-right)
         ab2_fill = Polygon(
-            [lx, by + a, 0], [lx + a, by + a, 0],
-            [lx + a, ty, 0], [lx, ty, 0],
+            [lx + a, by + b, 0], [rx, by + b, 0],
+            [rx, ty, 0], [lx + a, ty, 0],
             color="#FF8C00", fill_opacity=0.6, stroke_width=0,
         )
-        lab_ab2 = MathTex(r"\text{Area} = \mathbf{ab}", font_size=38)
+        lab_ab2 = MathTex(r"\text{Area} = \mathbf{ab}", font_size=28)
         lab_ab2.set_color_by_gradient("#00E5FF", "#00FF88")
-        lab_ab2.move_to([lx + a / 2, by + a + b / 2, 0])
+        lab_ab2.move_to([lx + a + b / 2, by + b + a / 2, 0])
 
         self.play(FadeIn(ab2_fill), Write(lab_ab2), run_time=0.8)
         self.wait(0.8)
 
-        # b² region
+        # b² region (bottom-right)
         b2_fill = Polygon(
-            [lx + a, by + a, 0], [rx, by + a, 0],
-            [rx, ty, 0], [lx + a, ty, 0],
+            [lx + a, by, 0], [rx, by, 0],
+            [rx, by + b, 0], [lx + a, by + b, 0],
             color=PINK, fill_opacity=0.6, stroke_width=0,
         )
         lab_b2 = MathTex(r"\text{Area} = \mathbf{b}^2", font_size=26)
         lab_b2.set_color_by_gradient("#0E52DA", "#00E5FF", "#00FF88")
-        lab_b2.move_to([lx + a + b / 2, by + a + b / 2, 0])
+        lab_b2.move_to([lx + a + b / 2, by + b / 2, 0])
 
         self.play(FadeIn(b2_fill), Write(lab_b2), run_time=0.8)
         self.wait(0.5)
@@ -185,18 +185,24 @@ class Formula1(Scene):
         # ── 8. Create copies, morph to rearranged row (original stays) ──
         target_y = by - 2.5
 
-        # Rearrange: a² on left, 2ab (combined) in middle, b² on right
+        # Rearrange: a² on left, ab1+ab2 vertical side by side in middle, b² on right
         gap = 0.4
-        total_width = a + gap + a + gap + b
+        total_width = a + gap + 2 * b + gap + b
         start_x = c[0] - total_width / 2
 
         a2_final_x = start_x + a / 2
         a2_final_y = target_y
 
-        ab2ab_final_x = start_x + a + gap + a / 2
-        ab2ab_final_y = target_y
+        # ab1 and ab2 both vertical (b×a), side by side without gap
+        ab1_final_x = start_x + a + gap + b / 2
+        ab1_final_y = target_y
 
-        b2_final_x = start_x + a + gap + a + gap + b / 2
+        ab2_final_x = start_x + a + gap + b + b / 2
+        ab2_final_y = target_y
+
+        ab_center_x = start_x + a + gap + b
+
+        b2_final_x = start_x + a + gap + 2 * b + gap + b / 2
         b2_final_y = target_y
 
         # Create copies of each fill + label
@@ -212,14 +218,14 @@ class Formula1(Scene):
         self.add(a2_copy, lab_a2_copy, ab1_copy, lab_ab1_copy,
                  ab2_copy, lab_ab2_copy, b2_copy, lab_b2_copy)
 
-        # Animate copies to rearranged positions
+        # Animate copies: ab1 rotated to vertical, ab2 already vertical, side by side
         self.play(
             a2_copy.animate.move_to([a2_final_x, a2_final_y, 0]),
             lab_a2_copy.animate.move_to([a2_final_x, a2_final_y, 0]),
-            ab1_copy.animate.move_to([ab2ab_final_x, ab2ab_final_y - b / 2, 0]).rotate(PI / 2),
-            lab_ab1_copy.animate.move_to([ab2ab_final_x, ab2ab_final_y - b / 2, 0]),
-            ab2_copy.animate.move_to([ab2ab_final_x, ab2ab_final_y + b / 2, 0]),
-            lab_ab2_copy.animate.move_to([ab2ab_final_x, ab2ab_final_y + b / 2, 0]),
+            ab1_copy.animate.move_to([ab1_final_x, ab1_final_y, 0]).rotate(PI / 2),
+            lab_ab1_copy.animate.move_to([ab1_final_x, ab1_final_y, 0]),
+            ab2_copy.animate.move_to([ab2_final_x, ab2_final_y, 0]),
+            lab_ab2_copy.animate.move_to([ab2_final_x, ab2_final_y, 0]),
             b2_copy.animate.move_to([b2_final_x, b2_final_y, 0]),
             lab_b2_copy.animate.move_to([b2_final_x, b2_final_y, 0]),
             run_time=2.5,
@@ -231,7 +237,7 @@ class Formula1(Scene):
         label_a2_final.move_to([a2_final_x, a2_final_y - a / 2 - 0.5, 0])
 
         label_2ab_final = MathTex("2ab", font_size=40, color=GREEN)
-        label_2ab_final.move_to([ab2ab_final_x, ab2ab_final_y - b - 0.5, 0])
+        label_2ab_final.move_to([ab_center_x, ab1_final_y - a / 2 - 0.5, 0])
 
         label_b2_final = MathTex("b^2", font_size=40, color=PINK)
         label_b2_final.move_to([b2_final_x, b2_final_y - b / 2 - 0.5, 0])
@@ -256,10 +262,7 @@ class Formula1(Scene):
             r"(a+b)^2 = a^2 + 2ab + b^2",
             font_size=42,
         )
-        final.set_color_by_tex("(a+b)^2", "#FFFFFF")
-        final.set_color_by_tex("a^2", "#FF4500")
-        final.set_color_by_tex("2ab", "#00E5FF")
-        final.set_color_by_tex("b^2", "#FF69B4")
+        final.set_color_by_gradient(BLUE, GREEN, YELLOW, PINK)
         final.next_to(rearranged_row, DOWN, buff=0.8)
 
         self.play(Write(final))
