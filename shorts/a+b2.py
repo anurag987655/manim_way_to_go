@@ -112,6 +112,15 @@ class Formula1(Scene):
         self.play(Write(lbl_left_a), Write(lbl_left_b), run_time=0.4)
         self.wait(0.3)
 
+        # Show total area label
+        label_area = MathTex(r"\text{Area} = (a+b)^2", font_size=40)
+        label_area.set_color_by_gradient(WHITE, YELLOW, ORANGE)
+        label_area.move_to([c[0], c[1], 0])
+
+        self.play(Write(label_area), run_time=0.6)
+        self.wait(0.8)
+        self.play(FadeOut(label_area), run_time=0.4)
+
         # ── 6. Internal dividing lines (one at a time) ──
         v_div = Line(
             [lx + a, by, 0], [lx + a, ty, 0],
