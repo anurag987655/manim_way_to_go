@@ -146,7 +146,7 @@ class Formula1(Scene):
             color=BLUE, fill_opacity=0.6, stroke_width=0,
         )
         lab_a2 = MathTex(r"\text{Area} = \mathbf{a}^2", font_size=38)
-        lab_a2.set_color_by_gradient("#FF4500", "#FFD700", "#FF69B4")
+        lab_a2.set_color_by_gradient(WHITE, YELLOW, ORANGE)
         lab_a2.move_to([lx + a / 2, by + b + a / 2, 0])
 
         self.play(FadeIn(a2_fill), Write(lab_a2), run_time=0.8)
@@ -159,7 +159,7 @@ class Formula1(Scene):
             color=GREEN, fill_opacity=0.6, stroke_width=0,
         )
         lab_ab1 = MathTex(r"\text{Area} = \mathbf{ab}", font_size=28)
-        lab_ab1.set_color_by_gradient("#00E5FF", "#00FF88")
+        lab_ab1.set_color_by_gradient(WHITE, YELLOW, ORANGE)
         lab_ab1.move_to([lx + a / 2, by + b / 2, 0])
 
         self.play(FadeIn(ab1_fill), Write(lab_ab1), run_time=0.8)
@@ -172,7 +172,7 @@ class Formula1(Scene):
             color="#FF8C00", fill_opacity=0.6, stroke_width=0,
         )
         lab_ab2 = MathTex(r"\text{Area} = \mathbf{ab}", font_size=28)
-        lab_ab2.set_color_by_gradient("#00E5FF", "#00FF88")
+        lab_ab2.set_color_by_gradient(WHITE, YELLOW, ORANGE)
         lab_ab2.move_to([lx + a + b / 2, by + b + a / 2, 0])
 
         self.play(FadeIn(ab2_fill), Write(lab_ab2), run_time=0.8)
@@ -185,7 +185,7 @@ class Formula1(Scene):
             color=PINK, fill_opacity=0.6, stroke_width=0,
         )
         lab_b2 = MathTex(r"\text{Area} = \mathbf{b}^2", font_size=26)
-        lab_b2.set_color_by_gradient("#0E52DA", "#00E5FF", "#00FF88")
+        lab_b2.set_color_by_gradient(WHITE, YELLOW, GREEN)
         lab_b2.move_to([lx + a + b / 2, by + b / 2, 0])
 
         self.play(FadeIn(b2_fill), Write(lab_b2), run_time=0.8)
