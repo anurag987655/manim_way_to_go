@@ -14,13 +14,13 @@ class Formula1(Scene):
         title = Text(
             "Visualizing Geometrically",
             gradient=(BLUE, PURPLE, PINK),
-            font_size=44,
+            font_size=40,
         )
-        title.to_edge(UP, buff=0.5)
+        title.to_edge(UP, buff=0.7)
 
         formula = MathTex("(a-b)^2 = a^2 - 2ab + b^2")
         formula.set_color_by_gradient(BLUE, GREEN, YELLOW)
-        formula.next_to(title, DOWN, buff=0.3)
+        formula.next_to(title, DOWN, buff=0.5)
 
         self.play(
             FadeIn(title, scale=0.8),
@@ -39,7 +39,7 @@ class Formula1(Scene):
         # ── 3. Draw Big Square ──
         big_sq = Square(side_length=a, color=WHITE, fill_opacity=0.08)
         big_sq.set_stroke(width=5, color=WHITE)
-        big_sq.next_to(formula, DOWN, buff=0.8)
+        big_sq.next_to(formula, DOWN, buff=1)
 
         self.play(Create(big_sq), run_time=0.6)
 
@@ -182,15 +182,17 @@ class Formula1(Scene):
         self.play(FadeIn(r3), Write(l3), run_time=0.5)
         self.wait(0.5)
 
-        # ── 10. Clean copy slides down ──
+        # ── 10. Copy splits from original and slides down ──
         target_y = c[1] - 5.0
-        clean_sq = Square(side_length=a, color=WHITE, fill_opacity=0.08)
-        clean_sq.set_stroke(width=5, color=WHITE)
-        clean_sq.move_to([c[0], target_y, 0])
+        sq_copy = big_sq.copy()
+        la_copy = label_a.copy()
+        ticks_copy = all_ticks.copy()
+        copy_group = VGroup(sq_copy, la_copy, ticks_copy)
+        copy_group.move_to(big_sq.get_center())
 
-        self.play(FadeIn(clean_sq, shift=UP * 0.5), run_time=0.6)
+        self.play(copy_group.animate.move_to([c[0], target_y, 0]), run_time=0.8)
 
-        c2 = clean_sq.get_center()
+        c2 = sq_copy.get_center()
         lx2 = c2[0] - a / 2
         rx2 = c2[0] + a / 2
         by2 = c2[1] - a / 2
@@ -271,7 +273,7 @@ class Formula1(Scene):
         # ── 14. Final formula derivation ──
         eq1 = MathTex(r"(a-b)^2 = a^2 - b(a-b) - ab", font_size=32)
         eq1.set_color_by_gradient(GOLD, YELLOW, ORANGE)
-        eq1.next_to(clean_sq, DOWN, buff=0.5)
+        eq1.next_to(sq_copy, DOWN, buff=0.5)
 
         self.play(Write(eq1), run_time=0.7)
         self.wait(0.3)
