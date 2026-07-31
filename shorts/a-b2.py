@@ -148,8 +148,8 @@ class Formula1(Scene):
             [lx + a_minus_b, by + a_minus_b, 0], [lx, by + a_minus_b, 0],
             color=GOLD, fill_opacity=0.55, stroke_width=0,
         )
-        l1 = MathTex(r"\text{Area} = (a-b)^2", font_size=28)
-        l1.set_color_by_gradient(BLUE, TEAL)
+        l1 = MathTex(r"\text{Area} = (a-b)^2", font_size=30)
+        l1.set_color_by_gradient(WHITE, GOLD)
         l1.move_to(r1.get_center())
 
         self.play(FadeIn(r1), Write(l1), run_time=0.5)
@@ -161,8 +161,9 @@ class Formula1(Scene):
             [rx, by + a_minus_b, 0], [lx + a_minus_b, by + a_minus_b, 0],
             color=ORANGE, fill_opacity=0.55, stroke_width=0,
         )
-        l2 = MathTex(r"\text{Area} = b(a-b)", font_size=22)
-        l2.set_color_by_gradient(ORANGE, RED)
+        l2 = MathTex(r"\text{Area} =", r"b(a-b)", font_size=24)
+        l2.set_color_by_gradient(WHITE, YELLOW)
+        l2.arrange(DOWN, buff=0.1)
         l2.move_to(r2.get_center())
 
         self.play(FadeIn(r2), Write(l2), run_time=0.5)
@@ -174,8 +175,8 @@ class Formula1(Scene):
             [rx, ty, 0], [lx, ty, 0],
             color=PURPLE, fill_opacity=0.55, stroke_width=0,
         )
-        l3 = MathTex(r"\text{Area} = ab", font_size=24)
-        l3.set_color_by_gradient(PURPLE, PINK)
+        l3 = MathTex(r"\text{Area} = ab", font_size=26)
+        l3.set_color_by_gradient(WHITE, PINK)
         l3.move_to(r3.get_center())
 
         self.play(FadeIn(r3), Write(l3), run_time=0.5)
