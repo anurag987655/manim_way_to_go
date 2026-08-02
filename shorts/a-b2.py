@@ -241,6 +241,13 @@ class Formula1(Scene):
             run_time=0.4,
         )
 
+        # White boundary for right side of (a-b)^2
+        right_ab2_line = Line(
+            [lx + a_minus_b, by, 0], [lx + a_minus_b, by + a_minus_b, 0],
+            color=WHITE, stroke_width=5,
+        )
+        self.play(Create(right_ab2_line), run_time=0.3)
+
         # b(a-b) rectangle with its edge copies
         r_slide_bab = Polygon(
             [lx + a_minus_b, by, 0], [rx, by, 0],
@@ -285,6 +292,13 @@ class Formula1(Scene):
             FadeOut(h_div),
             run_time=0.4,
         )
+
+        # White boundary for top of (a-b)^2
+        top_ab2_line = Line(
+            [lx, by + a_minus_b, 0], [lx + a_minus_b, by + a_minus_b, 0],
+            color=WHITE, stroke_width=5,
+        )
+        self.play(Create(top_ab2_line), run_time=0.3)
 
         # ab rectangle with its edge copies
         r_slide_ab = Polygon(
