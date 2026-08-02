@@ -340,35 +340,29 @@ class Formula1(Scene):
         self.play(Write(minus2), run_time=0.3)
         self.wait(0.3)
 
-        # ── 15. Reveal remaining (a-b)^2 in copy ──
-        r_remain = Polygon(
-            [lx2, by2, 0], [lx2 + a_minus_b, by2, 0],
-            [lx2 + a_minus_b, by2 + a_minus_b, 0], [lx2, by2 + a_minus_b, 0],
-            color=GOLD, fill_opacity=0.6, stroke_width=0,
-        )
-        l_remain = MathTex(r"(a-b)^2", font_size=32)
-        l_remain.set_color_by_gradient(GOLD, YELLOW)
-        l_remain.move_to(r_remain.get_center())
+        # ── 15. Formula label below rectangles ──
+        y_label = c2_y - a / 2 - 0.5
+        formula_center_x = (c2_x + target_ab_x) / 2
 
-        self.play(FadeIn(r_remain), Write(l_remain), run_time=0.5)
+        lbl_formula = MathTex(r"a^2 - b(a-b) - ab", font_size=32)
+        lbl_formula.set_color_by_gradient(WHITE, TEAL_C)
+        lbl_formula.move_to([formula_center_x, y_label, 0])
 
-        # Glow pulse
-        self.play(
-            r_remain.animate.scale(1.08),
-            l_remain.animate.scale(1.08),
-            run_time=0.25,
-        )
-        self.play(
-            r_remain.animate.scale(0.92),
-            l_remain.animate.scale(0.92),
-            run_time=0.25,
-        )
+        self.play(Write(lbl_formula), run_time=0.8)
+        self.wait(0.5)
+
+        # Step 2: Expand b(a-b)
+        lbl_step2 = MathTex(r"= a^2 - ab + b^2 - ab", font_size=30)
+        lbl_step2.set_color_by_gradient(GOLD, YELLOW)
+        lbl_step2.next_to(lbl_formula, DOWN, buff=0.3)
+
+        self.play(Write(lbl_step2), run_time=0.6)
         self.wait(0.4)
 
-        # ── 16. Final formula ──
-        eq_final = MathTex(r"= a^2 - 2ab + b^2", font_size=32)
-        eq_final.set_color_by_gradient(GREEN, YELLOW)
-        eq_final.next_to(ab_group, DOWN, buff=0.5)
+        # Step 3: Combine like terms
+        lbl_step3 = MathTex(r"= a^2 - 2ab + b^2", font_size=34)
+        lbl_step3.set_color_by_gradient(GREEN, YELLOW)
+        lbl_step3.next_to(lbl_step2, DOWN, buff=0.3)
 
-        self.play(Write(eq_final), run_time=0.7)
-        self.wait(1.5)
+        self.play(Write(lbl_step3), run_time=0.6)
+        self.wait(0.3)
