@@ -250,11 +250,13 @@ class Formula1(Scene):
         l_slide_bab.set_color_by_gradient(WHITE, YELLOW)
         l_slide_bab.move_to(r_slide_bab.get_center())
 
-        # Edge copies for b(a-b)
+        # Edge copies for b(a-b) - all 4 sides
         e_rbot_slide = Line([rx, by, 0], [rx, by + a_minus_b, 0], color=WHITE, stroke_width=5)
         e_bright_slide = Line([lx + a_minus_b, by, 0], [rx, by, 0], color=WHITE, stroke_width=5)
+        e_lbot_slide = Line([lx + a_minus_b, by, 0], [lx + a_minus_b, by + a_minus_b, 0], color=WHITE, stroke_width=5)
+        e_tleft_slide = Line([lx + a_minus_b, by + a_minus_b, 0], [rx, by + a_minus_b, 0], color=WHITE, stroke_width=5)
 
-        bab_group = VGroup(r_slide_bab, l_slide_bab, e_rbot_slide, e_bright_slide)
+        bab_group = VGroup(r_slide_bab, l_slide_bab, e_rbot_slide, e_bright_slide, e_lbot_slide, e_tleft_slide)
         target_bab_x = rx2 + 0.3 + a_minus_b / 2
         target_bab_y = c2_y
 
@@ -293,16 +295,18 @@ class Formula1(Scene):
         l_slide_ab.set_color_by_gradient(WHITE, PINK)
         l_slide_ab.move_to(r_slide_ab.get_center())
 
-        # Edge copies for ab
+        # Edge copies for ab - all 4 sides
         e_top_slide = Line([lx, ty, 0], [rx, ty, 0], color=WHITE, stroke_width=5)
         e_rtop_slide = Line([rx, by + a_minus_b, 0], [rx, ty, 0], color=WHITE, stroke_width=5)
         e_ltop_slide = Line([lx, by + a_minus_b, 0], [lx, ty, 0], color=WHITE, stroke_width=5)
+        e_bot_slide = Line([lx, by + a_minus_b, 0], [rx, by + a_minus_b, 0], color=WHITE, stroke_width=5)
 
         e_top_slide.rotate(PI / 2, about_point=r_slide_ab.get_center())
         e_rtop_slide.rotate(PI / 2, about_point=r_slide_ab.get_center())
         e_ltop_slide.rotate(PI / 2, about_point=r_slide_ab.get_center())
+        e_bot_slide.rotate(PI / 2, about_point=r_slide_ab.get_center())
 
-        ab_group = VGroup(r_slide_ab, l_slide_ab, e_top_slide, e_rtop_slide, e_ltop_slide)
+        ab_group = VGroup(r_slide_ab, l_slide_ab, e_top_slide, e_rtop_slide, e_ltop_slide, e_bot_slide)
         target_ab_x = target_bab_x + a_minus_b / 2 + 0.3 + b / 2
         target_ab_y = c2_y
 
