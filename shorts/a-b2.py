@@ -237,6 +237,7 @@ class Formula1(Scene):
             FadeOut(edge_r_bot), FadeOut(edge_b_right),
             FadeOut(seg_bot_b), FadeOut(lbl_bot_b),
             FadeOut(t_right),
+            FadeOut(v_div),
             run_time=0.4,
         )
 
@@ -268,7 +269,7 @@ class Formula1(Scene):
 
         # ── 12. Minus sign between sq_copy and b(a-b) ──
         minus1 = MathTex(r"-", font_size=40, color=WHITE)
-        minus1_x = (rx2 + (target_bab_x - a_minus_b / 2)) / 2
+        minus1_x = (rx2 + (target_bab_x - b / 2)) / 2
         minus1.move_to([minus1_x, c2_y, 0])
 
         self.play(Write(minus1), run_time=0.3)
@@ -281,6 +282,7 @@ class Formula1(Scene):
             FadeOut(seg_left_b), FadeOut(lbl_left_b),
             FadeOut(seg_left_ab), FadeOut(lbl_left_ab),
             FadeOut(label_a), FadeOut(t_top),
+            FadeOut(h_div),
             run_time=0.4,
         )
 
@@ -318,7 +320,7 @@ class Formula1(Scene):
 
         # ── 14. Minus sign between b(a-b) and ab ──
         minus2 = MathTex(r"-", font_size=40, color=WHITE)
-        minus2_x = ((target_bab_x + a_minus_b / 2) + (target_ab_x - b / 2)) / 2
+        minus2_x = ((target_bab_x + b / 2) + (target_ab_x - b / 2)) / 2
         minus2.move_to([minus2_x, c2_y, 0])
 
         self.play(Write(minus2), run_time=0.3)
