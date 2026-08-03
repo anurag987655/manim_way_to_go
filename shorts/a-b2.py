@@ -91,6 +91,14 @@ class Formula1(Scene):
         self.play(all_ticks.animate.set_stroke(opacity=1), run_time=0.5)
         self.wait(0.2)
 
+                # ── 5. Label a at top with buffer ──
+        label_a = MathTex("a", font_size=40, color=WHITE)
+        label_a.next_to(big_sq_fill, UP, buff=0.4)
+
+        self.play(Write(label_a), run_time=0.4)
+        self.wait(0.3)
+
+
         # ── 4b. Area label inside square ──
         area_label = MathTex(r"\text{Area} = a^2", font_size=30, color=WHITE)
         area_label.move_to(c)
@@ -99,12 +107,6 @@ class Formula1(Scene):
         self.wait(0.2)
         self.play(FadeOut(area_label))
 
-        # ── 5. Label a at top with buffer ──
-        label_a = MathTex("a", font_size=40, color=WHITE)
-        label_a.next_to(big_sq_fill, UP, buff=0.4)
-
-        self.play(Write(label_a), run_time=0.4)
-        self.wait(0.3)
 
         # ── 6. Mark b and a-b on bottom edge ──
         seg_bot_b = Line(
