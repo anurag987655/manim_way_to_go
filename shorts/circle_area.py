@@ -125,17 +125,26 @@ class CircleArea(Scene):
             font_size=24,
             color=GRAY_A,
         ).move_to(np.array([0, 1.2, 0]))
-        self.play(FadeIn(unroll_sub, shift=UP * 0.2), run_time=0.5)
+        unroll_sub.set_opacity(0.0)
+        self.play(unroll_sub.animate.set_opacity(1.0), run_time=0.4)
 
         # Staggered morphing of rings into stacked triangle strips
-        self.play(
-            LaggedStart(
-                *[ReplacementTransform(rings[i], lines[i]) for i in range(num_rings)],
-                lag_ratio=0.07,
-                run_time=3.4,
-            ),
-            FadeOut(border_circle, run_time=1.5),
-        )
+        # Text dims with each ring; disappears when top (innermost) ring arrives
+        for i in range(num_rings):
+            if i < num_rings - 1:
+                self.play(
+                    ReplacementTransform(rings[i], lines[i]),
+                    unroll_sub.animate.set_opacity(1.0 - (i + 1) / num_rings),
+                    run_time=0.2,
+                )
+            else:
+                self.play(
+                    ReplacementTransform(rings[i], lines[i]),
+                    FadeOut(unroll_sub),
+                    run_time=0.2,
+                )
+
+        self.play(FadeOut(border_circle), run_time=0.5)
         self.wait(0.4)
 
         # ── 5. Form Triangle Boundary & Annotations ──
