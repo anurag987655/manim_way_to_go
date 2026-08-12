@@ -353,20 +353,13 @@ class SemicircleAngle90(Scene):
             stroke_width=3.5, corner_radius=0.15,
         )
 
+        # Keep the circle, triangle and α/β marks — only the proof texts leave
         self.play(
             FadeOut(proof_card), FadeOut(proof_head),
             FadeOut(p1), FadeOut(p2), FadeOut(p3),
             FadeOut(p4), FadeOut(p5), FadeOut(p6),
-            FadeOut(oa_line),
-            FadeOut(tick_oa), FadeOut(tick_op), FadeOut(tick_oq),
-            FadeOut(a1), FadeOut(a2),
-            FadeOut(b1), FadeOut(b2),
-            FadeOut(a1_lab), FadeOut(b_lab),
-            FadeOut(a2_lab), FadeOut(b2_lab),
-            FadeOut(ap), FadeOut(aq), FadeOut(angle_mark), FadeOut(angle_label),
             run_time=0.5,
         )
-        self.play(FadeOut(a_dot), FadeOut(a_label), run_time=0.3)
 
         self.play(
             FadeIn(final_tex, scale=0.7),
