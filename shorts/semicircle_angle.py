@@ -55,35 +55,25 @@ class SemicircleAngle90(Scene):
         self.wait(0.5)
 
         # ══════════════════════════════════════════════════════
-        #  2. CIRCLE (gold + glow) & DIAMETER PQ
+        #  2. CIRCLE (gold) & DIAMETER PQ
         # ══════════════════════════════════════════════════════
-        halo1 = Circle(
-            radius=max_r + 0.1, color=GOLD,
-            stroke_width=10, stroke_opacity=0.22,
-        ).move_to(center)
-        halo2 = Circle(
-            radius=max_r + 0.24, color=GOLD,
-            stroke_width=14, stroke_opacity=0.10,
-        ).move_to(center)
         circle = Circle(
             radius=max_r, color=GOLD, stroke_width=3.5,
         ).move_to(center)
 
         self.play(
             Create(circle),
-            FadeIn(halo1, rate_func=rush_into),
-            FadeIn(halo2, rate_func=rush_into),
             run_time=1.2,
         )
         self.wait(0.3)
 
-        diameter = Line(P, Q, color=GOLD_E, stroke_width=4)
-        p_dot = Dot(P, color=GOLD, radius=0.09)
-        q_dot = Dot(Q, color=GOLD, radius=0.09)
-        p_label = Text("P", font_size=28, color=GOLD, weight=BOLD)
-        p_label.next_to(P, DOWN, buff=0.12).shift(LEFT * 0.05)
-        q_label = Text("Q", font_size=28, color=GOLD, weight=BOLD)
-        q_label.next_to(Q, DOWN, buff=0.12).shift(RIGHT * 0.05)
+        diameter = Line(P, Q, color=TEAL_B, stroke_width=4)
+        p_dot = Dot(P, color=GOLD, radius=0.09, z_index=10)
+        q_dot = Dot(Q, color=GOLD, radius=0.09, z_index=10)
+        p_label = Text("P", font_size=28, color=GOLD, weight=BOLD, z_index=10)
+        p_label.next_to(P, DOWN, buff=0.12).shift(LEFT * 0.22)
+        q_label = Text("Q", font_size=28, color=GOLD, weight=BOLD, z_index=10)
+        q_label.next_to(Q, DOWN, buff=0.12).shift(RIGHT * 0.22)
 
         self.play(
             Create(diameter), FadeIn(p_dot), FadeIn(q_dot),
@@ -95,7 +85,7 @@ class SemicircleAngle90(Scene):
         # ══════════════════════════════════════════════════════
         #  3. CENTER O — small dot
         # ══════════════════════════════════════════════════════
-        o_dot = Dot(center, color=WHITE, radius=0.06)
+        o_dot = Dot(center, color=WHITE, radius=0.06, z_index=10)
         o_label = Text("O", font_size=26, color=WHITE, weight=BOLD)
         o_label.next_to(center, DOWN, buff=0.14).shift(DOWN * 0.0)
 
@@ -106,19 +96,19 @@ class SemicircleAngle90(Scene):
         #  4. THE GLIDE — A moves, ∠PAQ stays 90°
         # ══════════════════════════════════════════════════════
         ap = always_redraw(lambda: Line(a(), P, color=TEAL_B, stroke_width=4.5))
-        aq = always_redraw(lambda: Line(a(), Q, color=PINK, stroke_width=4.5))
-        a_dot = always_redraw(lambda: Dot(a(), radius=0.1, color=GOLD))
+        aq = always_redraw(lambda: Line(a(), Q, color=TEAL_B, stroke_width=4.5))
+        a_dot = always_redraw(lambda: Dot(a(), radius=0.1, color=TEAL_B))
         a_label = always_redraw(lambda: Text(
-            "A", font_size=28, color=GOLD, weight=BOLD,
-        ).move_to(a() + UP * 0.18 + LEFT * 0.05))
+            "A", font_size=28, color=TEAL_B, weight=BOLD,
+        ).move_to(a() + UP * 0.32 + LEFT * 0.05))
 
-        angle_mark = always_redraw(lambda: Angle(
+        angle_mark = always_redraw(lambda: RightAngle(
             Line(a(), P), Line(a(), Q),
-            radius=0.38, color=GOLD, stroke_width=3.5,
+            length=0.36, color=TEAL_B, stroke_width=3.5,
         ))
         angle_label = always_redraw(lambda: Text(
-            "90°", font_size=26, color=GOLD, weight=BOLD,
-        ).move_to(a() + normalize((P - a()) + (Q - a())) * 0.9))
+            "90°", font_size=26, color=TEAL_B, weight=BOLD,
+        ).move_to(a() + normalize((P - a()) + (Q - a())) * 1.05))
 
         teaser = Text(
             "A glides along the circle — ∠PAQ stays 90°!",
@@ -134,9 +124,12 @@ class SemicircleAngle90(Scene):
         )
         self.wait(0.4)
 
-        # Continuous back-and-forth gliding (θ: π/2 → π → 0 → π/2)
-        self.play(theta_tracker.animate.set_value(PI - 0.02), run_time=2.0, rate_func=smooth)
-        self.play(theta_tracker.animate.set_value(0.02), run_time=4.0, rate_func=smooth)
+        # Continuous back-and-forth gliding (θ: π/2 → π-0.35 → 0.35 → π/2)
+        # A always stays inside the semicircle — never reaching P or Q,
+        # so AP and AQ never collapse into a single line.
+        glide_min, glide_max = 0.35, PI - 0.35
+        self.play(theta_tracker.animate.set_value(glide_max), run_time=2.0, rate_func=smooth)
+        self.play(theta_tracker.animate.set_value(glide_min), run_time=4.0, rate_func=smooth)
         self.play(theta_tracker.animate.set_value(PI / 2), run_time=2.0, rate_func=smooth)
         self.wait(0.4)
 
@@ -168,6 +161,7 @@ class SemicircleAngle90(Scene):
         self.play(theta_tracker.animate.set_value(PI / 2), run_time=0.8)
         self.play(
             FadeOut(why_card), FadeOut(why_txt),
+            FadeOut(angle_mark), FadeOut(angle_label),
             run_time=0.4,
         )
 
@@ -184,6 +178,23 @@ class SemicircleAngle90(Scene):
 
         oa_line = DashedLine(center, a(), color=YELLOW, stroke_width=3.5)
         self.play(Create(oa_line), run_time=0.5)
+        self.wait(0.2)
+
+        # Equal-length tick marks on the three radii
+        def tick_mark(p1_, p2_):
+            d = normalize(p2_ - p1_)
+            n = np.array([-d[1], d[0], 0.0])
+            mid = (p1_ + p2_) / 2
+            return Line(mid - n * 0.07, mid + n * 0.07, color=YELLOW_E, stroke_width=3)
+
+        tick_oa = tick_mark(center, a())
+        tick_op = tick_mark(center, P)
+        tick_oq = tick_mark(center, Q)
+        self.play(
+            *[Create(t) for t in [tick_oa, tick_op, tick_oq]],
+            run_time=0.9,
+        )
+        self.wait(0.2)
 
         # Labels: OP = OQ = OA — all radii
         p1 = MathTex(
@@ -201,12 +212,28 @@ class SemicircleAngle90(Scene):
         self.wait(0.3)
         self.play(FadeOut(p1_box), run_time=0.3)
 
-        # Isosceles triangles
+        # Isosceles triangles — flash the two triangles on the diagram
         p2 = MathTex(
             "\\triangle AOP \\ \\text{and}\\ \\triangle AOQ \\ \\text{are isosceles}",
             font_size=28, color=TEAL_B,
         ).move_to([0, -3.75, 0])
-        self.play(Write(p2), run_time=0.7)
+
+        tri_aop = Polygon(
+            a(), center, P,
+            fill_color=TEAL_B, fill_opacity=0.18, stroke_width=0,
+        )
+        tri_aoq = Polygon(
+            a(), center, Q,
+            fill_color=TEAL_B, fill_opacity=0.18, stroke_width=0,
+        )
+
+        self.play(
+            Write(p2),
+            FadeIn(tri_aop, scale=0.7),
+            FadeIn(tri_aoq, scale=0.7),
+            run_time=0.9,
+        )
+        self.play(FadeOut(tri_aop), FadeOut(tri_aoq), run_time=0.4)
         self.wait(0.2)
 
         # Base angles marked on the diagram: α and β
@@ -235,6 +262,11 @@ class SemicircleAngle90(Scene):
             run_time=0.9,
         )
         self.play(Write(p3), run_time=0.8)
+        self.play(
+            Indicate(VGroup(a1, a2), color=YELLOW, scale_factor=1.2),
+            Indicate(VGroup(b1, b2), color=TEAL_A, scale_factor=1.2),
+            run_time=0.9,
+        )
         self.wait(0.3)
 
         # Angle sum
@@ -243,6 +275,10 @@ class SemicircleAngle90(Scene):
             font_size=27, color=BLUE_B,
         ).move_to([0, -5.15, 0])
         self.play(Write(p4), run_time=0.8)
+        self.play(
+            Indicate(p4, color=BLUE_A, scale_factor=1.1),
+            run_time=0.8,
+        )
         self.wait(0.3)
 
         # ∴ α + β = 90°
@@ -251,6 +287,10 @@ class SemicircleAngle90(Scene):
             font_size=32, color=TEAL_A,
         ).move_to([0, -5.75, 0])
         self.play(Write(p5), run_time=0.8)
+        self.play(
+            Indicate(p5, color=TEAL_B, scale_factor=1.12),
+            run_time=0.6,
+        )
         self.wait(0.3)
 
         # Final: ∠PAQ = α + β = 90°
@@ -259,6 +299,11 @@ class SemicircleAngle90(Scene):
             font_size=33, color=GOLD,
         ).move_to([0, -6.35, 0])
         self.play(Write(p6), run_time=0.8)
+        for _ in range(2):
+            self.play(
+                p6.animate.scale(1.08),
+                run_time=0.3, rate_func=there_and_back,
+            )
         self.wait(0.6)
 
         # ══════════════════════════════════════════════════════
@@ -281,6 +326,7 @@ class SemicircleAngle90(Scene):
             FadeOut(p1), FadeOut(p2), FadeOut(p3),
             FadeOut(p4), FadeOut(p5), FadeOut(p6),
             FadeOut(oa_line),
+            FadeOut(tick_oa), FadeOut(tick_op), FadeOut(tick_oq),
             FadeOut(a1), FadeOut(a2), FadeOut(b1), FadeOut(b2),
             FadeOut(a1_lab), FadeOut(a2_lab), FadeOut(b1_lab), FadeOut(b2_lab),
             FadeOut(ap), FadeOut(aq), FadeOut(angle_mark), FadeOut(angle_label),
