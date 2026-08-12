@@ -250,37 +250,56 @@ class SemicircleAngle90(Scene):
         self.play(FadeOut(tri_aop), FadeOut(tri_aoq), run_time=0.4)
         self.wait(0.2)
 
-        # Base angles marked on the diagram: α at P, β label at Q
+        # Base angles marked on the diagram: α arcs (P, A) and β arcs (Q, A)
         arc_rad = 0.3
         a1 = Angle(Line(P, center), Line(P, a()), radius=arc_rad, color=YELLOW)
+        a2 = Angle(Line(a(), P), Line(a(), center), radius=0.24, color=YELLOW)
+        b1 = Angle(Line(Q, a()), Line(Q, center), radius=arc_rad, color=TEAL_A)
+        b2 = Angle(Line(a(), center), Line(a(), Q), radius=0.34, color=TEAL_A)
         a1_lab = MathTex("\\alpha", font_size=26, color=YELLOW).move_to(
             P + normalize((a() - P) + (center - P)) * 0.5)
         b_lab = MathTex("\\beta", font_size=26, color=TEAL_A).move_to(
             Q + normalize((a() - Q) + (center - Q)) * 0.5)
         a2_lab = MathTex("\\alpha", font_size=26, color=YELLOW).move_to(
-            a() + normalize((P - a()) + (center - a())) * 0.64)
+            a() + normalize((P - a()) + (center - a())) * 0.40)
         b2_lab = MathTex("\\beta", font_size=26, color=TEAL_A).move_to(
-            a() + normalize((Q - a()) + (center - a())) * 0.64)
+            a() + normalize((Q - a()) + (center - a())) * 0.55)
 
         p3 = MathTex(
-            "\\angle OPA = \\angle OAP = \\alpha,\\quad \\angle OQA = \\angle OAQ = \\beta",
+            "\\angle OPA = \\angle OAP = \\alpha",
+            "\\quad\\;\\;",
+            "\\quad \\angle OQA = \\angle OAQ = \\beta",
             font_size=23, color=WHITE,
         ).move_to([0, -1.65, 0])
+        p3[1].set_opacity(0)
 
+        # Step 1: write α part in a bbox, then show α arcs at both P and A
+        self.play(Write(p3[0]), run_time=0.8)
+        p3_boxA = SurroundingRectangle(
+            p3[0], color=YELLOW, buff=0.12, stroke_width=2, corner_radius=0.1,
+        )
+        self.play(Create(p3_boxA), run_time=0.4)
         self.play(
-            Create(a1),
-            FadeIn(a1_lab, scale=0.6),
-            FadeIn(b_lab, scale=0.6),
-            FadeIn(a2_lab, scale=0.6),
-            FadeIn(b2_lab, scale=0.6),
+            Create(a1), Create(a2),
+            FadeIn(a1_lab, scale=0.6), FadeIn(a2_lab, scale=0.6),
             run_time=0.9,
         )
-        self.play(Write(p3), run_time=0.8)
+        self.wait(0.6)
+        self.play(FadeOut(p3_boxA), run_time=0.3)
+
+        # Step 2: write β part in a bbox, then show β arcs at both Q and A
+        self.play(Write(p3[2]), run_time=0.8)
+        p3_boxB = SurroundingRectangle(
+            p3[2], color=TEAL_A, buff=0.12, stroke_width=2, corner_radius=0.1,
+        )
+        self.play(Create(p3_boxB), run_time=0.4)
         self.play(
-            Indicate(a1, color=YELLOW, scale_factor=1.2),
+            Create(b1), Create(b2),
+            FadeIn(b_lab, scale=0.6), FadeIn(b2_lab, scale=0.6),
             run_time=0.9,
         )
-        self.wait(0.3)
+        self.wait(0.5)
+        self.play(FadeOut(p3_boxB), run_time=0.3)
 
         # Angle sum
         p4 = MathTex(
@@ -340,7 +359,8 @@ class SemicircleAngle90(Scene):
             FadeOut(p4), FadeOut(p5), FadeOut(p6),
             FadeOut(oa_line),
             FadeOut(tick_oa), FadeOut(tick_op), FadeOut(tick_oq),
-            FadeOut(a1),
+            FadeOut(a1), FadeOut(a2),
+            FadeOut(b1), FadeOut(b2),
             FadeOut(a1_lab), FadeOut(b_lab),
             FadeOut(a2_lab), FadeOut(b2_lab),
             FadeOut(ap), FadeOut(aq), FadeOut(angle_mark), FadeOut(angle_label),
