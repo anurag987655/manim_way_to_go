@@ -1,4 +1,5 @@
 from manim import *
+import numpy as np
 
 class ParallelLines(Scene):
     def construct(self):
@@ -94,3 +95,50 @@ class ParallelLines(Scene):
         self.wait(1.5)
 
         self.play(FadeOut(question), run_time = 1)
+
+
+class CurvedLines(ThreeDScene):
+    def construct(self):
+
+        sphere = Sphere(radius = 2)
+        self.set_camera_orientation(phi = 70 * DEGREES , theta= 0 * DEGREES)
+
+        self.play(Create(sphere), run_time = 2)
+        self.wait(1)
+
+        ## Creating point and label
+
+        theta_a = -20 * DEGREES
+        theta_b = 20 * DEGREES
+
+        point_a = Dot3D(point= np.array([2 * np.cos(theta_a), 2 * np.sin(theta_a), 0]))
+        point_b = Dot3D(point = np.array([2 * np.cos(theta_b), 2* np.sin(theta_b), 0]))
+
+        self.play(Create(point_a))
+        self.play(Create(point_b))
+
+
+        shift = 0.3
+        label_a = MathTex("A")
+        label_a.move_to(point_a.get_center() + np.array([0.1 , -shift, 0]))
+
+        label_b = MathTex("B")
+        label_b.next_to(point_b.get_center() + np.array([0.1 , shift, 0]))
+
+        self.add_fixed_orientation_mobjects(label_a, label_b)
+
+        self.play(Write(label_a), Write(label_b))
+
+        ## Creating parametric curve connecting two points A and B 
+
+        line_ab = ParametricFunction(lambda theta:np.array([2 * np.cos(theta), 2 * np.sin(theta), 0]), t_range= [-20 * DEGREES, 20 * DEGREES])
+
+        self.play(Create(line_ab))
+        self.wait(1)
+
+        curve_a = ParametricFunction(lambda phi : np.array([2 * np.sin(phi) * np.cos(theta_a), 2 * np.sin(phi) * np.sin(theta_a), 2 * np.cos(phi)]), t_range=[0 , 90 * DEGREES ])
+
+        curve_b = ParametricFunction(lambda phi : np.array([2 * np.sin(phi) * np.cos(theta_b), 2 * np.sin(phi) * np.sin(theta_b), 2 * np.cos(phi)]), t_range=[0 , 90 * DEGREES ])
+
+        self.play(Create(curve_a))
+        self.play(Create(curve_b))
