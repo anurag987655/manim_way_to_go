@@ -141,9 +141,8 @@ class CurvedLines(ThreeDScene):
         curve_b = ParametricFunction(lambda phi : np.array([2 * np.sin(phi) * np.cos(theta_b), 2 * np.sin(phi) * np.sin(theta_b), 2 * np.cos(phi)]), t_range=[0 , 90 * DEGREES ])
 
         self.play(Create(curve_a))
-        self.play(Create(curve_b))
 
-        # creating a right angle label 
+        # creating a right angle label a
 
         size = 0.2 
         P_a = point_a.get_center()
@@ -156,11 +155,16 @@ class CurvedLines(ThreeDScene):
 
         self.play(Create(right_angle_a))
 
+        ## Creating a curved b
+
+        self.play(Create(curve_b))
+
+        ## Creating a rt angle at B
+        
         p_b = point_b.get_center()
 
         u_b = np.array([-np.sin(theta_b), np.cos(theta_b), 0])
 
         right_angle_b = VMobject()
         right_angle_b.set_points_as_corners([p_b - u_b * size, p_b - u_b * size + v * size, p_b + v * size])
-
         self.play(Create(right_angle_b))
