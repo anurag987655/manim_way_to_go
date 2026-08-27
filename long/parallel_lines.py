@@ -268,7 +268,14 @@ class CurvedLines(ThreeDScene):
 
         # Angle phi label at Origin between Z-axis and OP
         phi_arc_label = MathTex(r"\phi", color=GREEN_B)
-        phi_arc_label.move_to(ORIGIN + UP * 1.2 + RIGHT * 0.05)
+        phi_half = phi_val / 2
+        phi_label_radius = 0.5
+        phi_label_pos = np.array([
+            phi_label_radius * np.sin(phi_half) * np.cos(theta_b),
+            phi_label_radius * np.sin(phi_half) * np.sin(theta_b),
+            phi_label_radius * np.cos(phi_half)
+        ])
+        phi_arc_label.move_to(phi_label_pos)
         self.add_fixed_orientation_mobjects(phi_arc_label)
         self.play(Write(phi_arc_label))
 
