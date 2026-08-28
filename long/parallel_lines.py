@@ -305,3 +305,281 @@ class CurvedLines(ThreeDScene):
         self.add_fixed_in_frame_mobjects(rect_highlight)
         self.play(Create(rect_highlight))
         self.wait(3)
+
+        # ========== FINAL SCENE: WHY LINES MEET ==========
+
+        # Fade out proof elements
+        self.play(
+            FadeOut(card_group, rect_highlight, proof_title,
+                    z_axis, center_dot, origin_label,
+                    P_dot, P_label, line_OP, R_label,
+                    Cz_dot, line_r, r_label, line_oz,
+                    phi_arc_label, lat_circle),
+            run_time=1.5
+        )
+
+        # Move camera to optimal 3D zoomed-in perspective (Title removed per user request)
+        self.move_camera(phi=68 * DEGREES, theta=-45 * DEGREES, zoom=1.5, run_time=1.5)
+        self.play(sphere.animate.set_style(fill_opacity=0.18, stroke_opacity=0.5, stroke_color=BLUE_B), run_time=1)
+
+        # Sphere radius & Longitude angles for A and B (positioned to show curved paths clearly from camera angle -45°)
+        R_sphere = 2
+        theta_a = -15 * DEGREES
+        theta_b = 55 * DEGREES
+        delta_theta = theta_b - theta_a
+
+        # 1. Equator line (cyan baseline)
+        equator = ParametricFunction(
+            lambda t: np.array([R_sphere * np.cos(t), R_sphere * np.sin(t), 0]),
+            t_range=[0, TAU],
+            color=TEAL_C,
+            stroke_width=3.5
+        )
+        self.play(Create(equator), run_time=1.5)
+
+        # Starting points A and B on equator
+        pos_A = np.array([R_sphere * np.cos(theta_a), R_sphere * np.sin(theta_a), 0])
+        pos_B = np.array([R_sphere * np.cos(theta_b), R_sphere * np.sin(theta_b), 0])
+
+        point_a = Dot3D(point=pos_A, color=ORANGE, radius=0.11)
+        point_b = Dot3D(point=pos_B, color=TEAL_A, radius=0.11)
+
+        label_a = MathTex("A", color=ORANGE).scale(0.85)
+        label_b = MathTex("B", color=TEAL_A).scale(0.85)
+        label_a.next_to(point_a, DOWN * 0.5 + LEFT * 0.3)
+        label_b.next_to(point_b, DOWN * 0.5 + RIGHT * 0.3)
+        self.add_fixed_orientation_mobjects(label_a, label_b)
+
+        self.play(Create(point_a), Create(point_b), Write(label_a), Write(label_b))
+
+        # 2. Showy Glowing Perpendicular lines (Meridians) starting at A and B going up to North Pole
+        glow_a = ParametricFunction(
+            lambda phi: np.array([
+                R_sphere * np.sin(phi) * np.cos(theta_a),
+                R_sphere * np.sin(phi) * np.sin(theta_a),
+                R_sphere * np.cos(phi)
+            ]),
+            t_range=[0.001 * DEGREES, 90 * DEGREES],
+            color=ORANGE,
+            stroke_width=14,
+            stroke_opacity=0.35
+        )
+        perpendicular_a = ParametricFunction(
+            lambda phi: np.array([
+                R_sphere * np.sin(phi) * np.cos(theta_a),
+                R_sphere * np.sin(phi) * np.sin(theta_a),
+                R_sphere * np.cos(phi)
+            ]),
+            t_range=[0.001 * DEGREES, 90 * DEGREES],
+            color=ORANGE,
+            stroke_width=6.5
+        )
+        line_a_group = VGroup(glow_a, perpendicular_a)
+
+        glow_b = ParametricFunction(
+            lambda phi: np.array([
+                R_sphere * np.sin(phi) * np.cos(theta_b),
+                R_sphere * np.sin(phi) * np.sin(theta_b),
+                R_sphere * np.cos(phi)
+            ]),
+            t_range=[0.001 * DEGREES, 90 * DEGREES],
+            color=TEAL_A,
+            stroke_width=14,
+            stroke_opacity=0.35
+        )
+        perpendicular_b = ParametricFunction(
+            lambda phi: np.array([
+                R_sphere * np.sin(phi) * np.cos(theta_b),
+                R_sphere * np.sin(phi) * np.sin(theta_b),
+                R_sphere * np.cos(phi)
+            ]),
+            t_range=[0.001 * DEGREES, 90 * DEGREES],
+            color=TEAL_A,
+            stroke_width=6.5
+        )
+        line_b_group = VGroup(glow_b, perpendicular_b)
+
+        # 3. Showy Filled 3D Right Angle boxes at A and B (90° perpendicular markers)
+        sq_size = 0.35
+        u_A = np.array([-np.sin(theta_a), np.cos(theta_a), 0])
+        u_B = np.array([-np.sin(theta_b), np.cos(theta_b), 0])
+        v_up = np.array([0, 0, 1])
+
+        right_angle_A = Polygon(
+            pos_A,
+            pos_A + v_up * sq_size,
+            pos_A + v_up * sq_size + u_A * sq_size,
+            pos_A + u_A * sq_size,
+            color=YELLOW,
+            fill_color=YELLOW,
+            fill_opacity=0.45,
+            stroke_width=3.5
+        )
+
+        right_angle_B = Polygon(
+            pos_B,
+            pos_B + v_up * sq_size,
+            pos_B + v_up * sq_size - u_B * sq_size,
+            pos_B - u_B * sq_size,
+            color=YELLOW,
+            fill_color=YELLOW,
+            fill_opacity=0.45,
+            stroke_width=3.5
+        )
+
+        perp_subtitle = MathTex(
+            r"\text{Perpendicular Lines } L_A \text{ and } L_B \text{ leave Equator at } 90^\circ",
+            color=GOLD
+        ).to_edge(DOWN).scale(0.75)
+        self.add_fixed_in_frame_mobjects(perp_subtitle)
+
+        self.play(
+            Create(line_a_group),
+            Create(line_b_group),
+            Create(right_angle_A),
+            Create(right_angle_B),
+            Write(perp_subtitle),
+            run_time=2.5
+        )
+        self.wait(1.5)
+        self.play(FadeOut(perp_subtitle))
+
+        # 4. Sliding elements: phi tracker from 90° (Equator) up to 0° (North Pole)
+        phi_tracker = ValueTracker(90 * DEGREES)
+
+        # Dynamic parallel circle (pink ring)
+        lat_circle = always_redraw(lambda: ParametricFunction(
+            lambda t: np.array([
+                R_sphere * np.sin(phi_tracker.get_value()) * np.cos(t),
+                R_sphere * np.sin(phi_tracker.get_value()) * np.sin(t),
+                R_sphere * np.cos(phi_tracker.get_value())
+            ]),
+            t_range=[0, TAU],
+            color=PINK,
+            stroke_width=2,
+            stroke_opacity=0.75
+        ))
+
+        # Dynamic connector arc dab (bright yellow arc between perpendicular lines)
+        connector_dab = always_redraw(lambda: ParametricFunction(
+            lambda t: np.array([
+                R_sphere * np.sin(phi_tracker.get_value()) * np.cos(t),
+                R_sphere * np.sin(phi_tracker.get_value()) * np.sin(t),
+                R_sphere * np.cos(phi_tracker.get_value())
+            ]),
+            t_range=[theta_a, theta_b],
+            color=YELLOW,
+            stroke_width=5.5
+        ))
+
+        # Dynamic dots on the perpendicular lines at current height
+        dot_A_dyn = always_redraw(lambda: Dot3D(
+            point=np.array([
+                R_sphere * np.sin(phi_tracker.get_value()) * np.cos(theta_a),
+                R_sphere * np.sin(phi_tracker.get_value()) * np.sin(theta_a),
+                R_sphere * np.cos(phi_tracker.get_value())
+            ]),
+            color=ORANGE,
+            radius=0.09
+        ))
+
+        dot_B_dyn = always_redraw(lambda: Dot3D(
+            point=np.array([
+                R_sphere * np.sin(phi_tracker.get_value()) * np.cos(theta_b),
+                R_sphere * np.sin(phi_tracker.get_value()) * np.sin(theta_b),
+                R_sphere * np.cos(phi_tracker.get_value())
+            ]),
+            color=TEAL_A,
+            radius=0.09
+        ))
+
+        # Dynamic radius line r (from Z-axis center Cz to dot_A_dyn)
+        line_r = always_redraw(lambda: Line3D(
+            start=np.array([0, 0, R_sphere * np.cos(phi_tracker.get_value())]),
+            end=np.array([
+                R_sphere * np.sin(phi_tracker.get_value()) * np.cos(theta_a),
+                R_sphere * np.sin(phi_tracker.get_value()) * np.sin(theta_a),
+                R_sphere * np.cos(phi_tracker.get_value())
+            ]),
+            color=RED,
+            thickness=0.035
+        ))
+
+        # Fixed orientation camera-facing dynamic label for dab (placed ABOVE/OUTSIDE the yellow arc)
+        label_dab = MathTex(f"d_{{AB}} = {2.0 * np.sin(90*DEGREES) * delta_theta:.2f}", color=YELLOW).scale(0.7)
+        self.add_fixed_orientation_mobjects(label_dab)
+
+        def update_label_dab(m):
+            p = phi_tracker.get_value()
+            r_val = R_sphere * np.sin(p)
+            dab_val = r_val * delta_theta
+            mid_theta = (theta_a + theta_b) / 2
+            pos = np.array([
+                (R_sphere + 0.45) * np.sin(p) * np.cos(mid_theta),
+                (R_sphere + 0.45) * np.sin(p) * np.sin(mid_theta),
+                R_sphere * np.cos(p) + 0.35
+            ])
+            m.become(MathTex(f"d_{{AB}} = {dab_val:.2f}", color=YELLOW).scale(0.7))
+            m.move_to(pos)
+
+        label_dab.add_updater(update_label_dab)
+
+        # Fixed orientation camera-facing dynamic label for r (placed BELOW/INSIDE the radius line r)
+        label_r = MathTex(f"r = {2.0 * np.sin(90*DEGREES):.2f}", color=RED).scale(0.65)
+        self.add_fixed_orientation_mobjects(label_r)
+
+        def update_label_r(m):
+            p = phi_tracker.get_value()
+            r_val = R_sphere * np.sin(p)
+            cz = np.array([0, 0, R_sphere * np.cos(p)])
+            pt_a = np.array([
+                R_sphere * np.sin(p) * np.cos(theta_a),
+                R_sphere * np.sin(p) * np.sin(theta_a),
+                R_sphere * np.cos(p)
+            ])
+            mid_pos = (cz + pt_a) * 0.5 + np.array([-0.25, -0.2, -0.35])
+            m.become(MathTex(f"r = {r_val:.2f}", color=RED).scale(0.65))
+            m.move_to(mid_pos)
+
+        label_r.add_updater(update_label_r)
+
+        # Create sliding marker elements
+        self.play(
+            Create(lat_circle),
+            Create(connector_dab),
+            Create(dot_A_dyn),
+            Create(dot_B_dyn),
+            Create(line_r),
+            Write(label_dab),
+            Write(label_r),
+            run_time=1.5
+        )
+        self.wait(0.5)
+
+        # 5. SLIDE UP ANIMATION: dab and r slide UP as phi decreases to 1°
+        self.play(
+            phi_tracker.animate.set_value(1.0 * DEGREES),
+            run_time=8,
+            rate_func=smooth
+        )
+        self.wait(0.5)
+
+        # Remove updaters before concluding
+        label_dab.clear_updaters()
+        label_r.clear_updaters()
+
+        # 6. AT THE POLE: dab = 0 and r = 0 -> Lines Meet!
+        north_pole = Dot3D(point=np.array([0, 0, R_sphere]), color=GOLD, radius=0.15)
+        
+        pole_text = MathTex(
+            r"d_{AB} = 0 \implies \text{Perpendicular Lines Meet at the Pole!}",
+            color=GOLD
+        ).to_edge(DOWN).scale(0.75)
+        self.add_fixed_in_frame_mobjects(pole_text)
+
+        self.play(Create(north_pole), Write(pole_text), run_time=1.5)
+        self.wait(3)
+
+        # Smooth fade out of everything
+        self.play(*[FadeOut(mob) for mob in self.mobjects], run_time=2)
+        self.wait(1)
