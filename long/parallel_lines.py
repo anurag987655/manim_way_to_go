@@ -285,7 +285,8 @@ class CurvedLines(ThreeDScene):
         step3 = MathTex(r"r = R \sin\phi", color=GOLD)
         step4 = MathTex(r"\text{(If } \theta \text{ is latitude from Equator: } r = R \cos\theta\text{)}", color=GRAY)
 
-        derivation_box = VGroup(step1, step2, step3, step4).arrange(DOWN, aligned_edge=LEFT, buff=0.2).scale(0.65).to_corner(UR)
+        derivation_box = VGroup(step1, step2, step3, step4).arrange(DOWN, aligned_edge=LEFT, buff=0.2).scale(0.65)
+        derivation_box.move_to([-2.0, -1.8, 0])
 
         bg_card = Rectangle(
             width=derivation_box.width + 0.3,
@@ -297,7 +298,7 @@ class CurvedLines(ThreeDScene):
 
         card_group = VGroup(bg_card, derivation_box)
         self.add_fixed_in_frame_mobjects(card_group)
-        self.play(FadeIn(card_group, shift=LEFT))
+        self.play(GrowFromCenter(card_group))
         self.wait(1.5)
 
         # Highlight ONLY the essential formula r = R sin(phi)
@@ -353,17 +354,6 @@ class CurvedLines(ThreeDScene):
         self.play(Create(point_a), Create(point_b), Write(label_a), Write(label_b))
 
         # 2. Showy Glowing Perpendicular lines (Meridians) starting at A and B going up to North Pole
-        glow_a = ParametricFunction(
-            lambda phi: np.array([
-                R_sphere * np.sin(phi) * np.cos(theta_a),
-                R_sphere * np.sin(phi) * np.sin(theta_a),
-                R_sphere * np.cos(phi)
-            ]),
-            t_range=[0.001 * DEGREES, 90 * DEGREES],
-            color=ORANGE,
-            stroke_width=14,
-            stroke_opacity=0.35
-        )
         perpendicular_a = ParametricFunction(
             lambda phi: np.array([
                 R_sphere * np.sin(phi) * np.cos(theta_a),
@@ -374,19 +364,8 @@ class CurvedLines(ThreeDScene):
             color=ORANGE,
             stroke_width=6.5
         )
-        line_a_group = VGroup(glow_a, perpendicular_a)
+        line_a_group = perpendicular_a
 
-        glow_b = ParametricFunction(
-            lambda phi: np.array([
-                R_sphere * np.sin(phi) * np.cos(theta_b),
-                R_sphere * np.sin(phi) * np.sin(theta_b),
-                R_sphere * np.cos(phi)
-            ]),
-            t_range=[0.001 * DEGREES, 90 * DEGREES],
-            color=TEAL_A,
-            stroke_width=14,
-            stroke_opacity=0.35
-        )
         perpendicular_b = ParametricFunction(
             lambda phi: np.array([
                 R_sphere * np.sin(phi) * np.cos(theta_b),
@@ -397,7 +376,7 @@ class CurvedLines(ThreeDScene):
             color=TEAL_A,
             stroke_width=6.5
         )
-        line_b_group = VGroup(glow_b, perpendicular_b)
+        line_b_group = perpendicular_b
 
         # 3. Showy Filled 3D Right Angle boxes at A and B (90° perpendicular markers)
         sq_size = 0.35
@@ -515,8 +494,8 @@ class CurvedLines(ThreeDScene):
             dab_val = r_val * delta_theta
             mid_theta = (theta_a + theta_b) / 2
             pos = np.array([
-                (R_sphere + 0.45) * np.sin(p) * np.cos(mid_theta),
-                (R_sphere + 0.45) * np.sin(p) * np.sin(mid_theta),
+                (R_sphere + 0.45) * np.sin(p) * np.cos(mid_theta) + 0.15,
+                (R_sphere + 0.45) * np.sin(p) * np.sin(mid_theta) + 0.6,
                 R_sphere * np.cos(p) + 0.35
             ])
             m.become(MathTex(f"d_{{AB}} = {dab_val:.2f}", color=YELLOW).scale(0.7))
@@ -525,7 +504,7 @@ class CurvedLines(ThreeDScene):
         label_dab.add_updater(update_label_dab)
 
         # Fixed orientation camera-facing dynamic label for r (placed BELOW/INSIDE the radius line r)
-        label_r = MathTex(f"r = {2.0 * np.sin(90*DEGREES):.2f}", color=RED).scale(0.65)
+        label_r = MathTex(f"r = {2.0 * np.sin(90*DEGREES):.2f}", color=WHITE).scale(0.65)
         self.add_fixed_orientation_mobjects(label_r)
 
         def update_label_r(m):
@@ -537,8 +516,8 @@ class CurvedLines(ThreeDScene):
                 R_sphere * np.sin(p) * np.sin(theta_a),
                 R_sphere * np.cos(p)
             ])
-            mid_pos = (cz + pt_a) * 0.5 + np.array([-0.25, -0.2, -0.35])
-            m.become(MathTex(f"r = {r_val:.2f}", color=RED).scale(0.65))
+            mid_pos = (cz + pt_a) * 0.5 + np.array([-0.5, -0.4, -0.5])
+            m.become(MathTex(f"r = {r_val:.2f}", color=WHITE).scale(0.65))
             m.move_to(mid_pos)
 
         label_r.add_updater(update_label_r)
@@ -549,16 +528,16 @@ class CurvedLines(ThreeDScene):
             Create(connector_dab),
             Create(dot_A_dyn),
             Create(dot_B_dyn),
-            Create(line_r),
             Write(label_dab),
             Write(label_r),
             run_time=1.5
         )
+        self.play(Create(line_r), run_time=1)
         self.wait(0.5)
 
         # 5. SLIDE UP ANIMATION: dab and r slide UP as phi decreases to 1°
         self.play(
-            phi_tracker.animate.set_value(1.0 * DEGREES),
+            phi_tracker.animate.set_value(0 * DEGREES),
             run_time=8,
             rate_func=smooth
         )
