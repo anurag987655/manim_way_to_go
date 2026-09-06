@@ -3,7 +3,7 @@ import numpy as np
 
 class ParallelLines(Scene):
     def construct(self):
-        line_ab = Line(LEFT *2, RIGHT*2)
+        line_ab = Line(LEFT *2, RIGHT*2, color=BLUE)
 
         ## Adding label A and B at respective end points: 
 
@@ -21,14 +21,14 @@ class ParallelLines(Scene):
 
         ## Creating two perpendicular lines at A and B 
 
-        perpendicular_a = Line(line_ab.get_start() + UP *2, line_ab.get_start() + DOWN * 2)
-        perpendicular_b = Line(line_ab.get_end() + UP *2, line_ab.get_end() + DOWN * 2) 
+        perpendicular_a = Line(line_ab.get_start() + UP *2, line_ab.get_start() + DOWN * 2, color=TEAL)
+        perpendicular_b = Line(line_ab.get_end() + UP *2, line_ab.get_end() + DOWN * 2, color=TEAL) 
 
 
         # Creating a right angle labels 
 
-        right_a = RightAngle(perpendicular_a, line_ab, quadrant= (-1,1))
-        right_b = RightAngle(perpendicular_b, line_ab, quadrant = (-1,-1))
+        right_a = RightAngle(perpendicular_a, line_ab, quadrant= (-1,1), color=YELLOW)
+        right_b = RightAngle(perpendicular_b, line_ab, quadrant = (-1,-1), color=YELLOW)
 
         # perpendicular Scene
 
@@ -41,8 +41,8 @@ class ParallelLines(Scene):
 
         # Introducing horizental connector
 
-        connector = DashedLine(line_ab.get_start() + UP * 1.5, line_ab.get_end() + UP * 1.5)
-        connector_label = MathTex("d_{AB}")
+        connector = DashedLine(line_ab.get_start() + UP * 1.5, line_ab.get_end() + UP * 1.5, color=PINK)
+        connector_label = MathTex("d=\\text{constant}", color=PINK)
         connector_label.next_to(connector, UP)
 
         self.play(Create(connector))
@@ -52,15 +52,7 @@ class ParallelLines(Scene):
 
         self.play(distance_marker.animate.shift(DOWN * 3), run_time = 2)
         self.play(distance_marker.animate.shift(UP * 3), run_time = 2)
-        self.wait(1)
-
-        ## constant distance indication
-
-        distance_constant = MathTex("d = \\text{constant}")
-        distance_constant.move_to(connector_label)
-
-        self.play(Transform(connector_label,distance_constant), run_time = 1.5)
-        self.wait(1)
+ 
 
         ## fading out everything a part from line
         
@@ -72,16 +64,16 @@ class ParallelLines(Scene):
         P = perpendicular_a.get_center() + UP * 0.3
 
         shift_val = 0.2
-        p1_line = Line(P, P + DOWN * shift_val + RIGHT * shift_val)
-        p2_line = Line(P, P + DOWN *  shift_val+ LEFT * shift_val)
+        p1_line = Line(P, P + DOWN * shift_val + RIGHT * shift_val, color=ORANGE)
+        p2_line = Line(P, P + DOWN *  shift_val+ LEFT * shift_val, color=ORANGE)
 
         parallel_mark_a = VGroup(p1_line, p2_line)
         self.play(Create(parallel_mark_a))
 
 
         s = perpendicular_b.get_center() + UP * 0.3 
-        p3_line = Line(s, s + DOWN * shift_val + RIGHT * shift_val)
-        p4_line = Line(s, s + DOWN * shift_val + LEFT * shift_val) 
+        p3_line = Line(s, s + DOWN * shift_val + RIGHT * shift_val, color=ORANGE)
+        p4_line = Line(s, s + DOWN * shift_val + LEFT * shift_val, color=ORANGE) 
 
         parallel_mark_b = VGroup(p3_line, p4_line)
         self.play(Create(parallel_mark_b))
@@ -90,7 +82,7 @@ class ParallelLines(Scene):
         ## removing every remaining object from flat world
         self.play(FadeOut(perpendicular_a, perpendicular_b, parallel_mark_a, parallel_mark_b), run_time = 1)
 
-        question = Text("But What if space isn't flat?")
+        question = Text("But What if space is curved?", color=YELLOW)
         self.play(Write(question), run_time = 1)
         self.wait(1.5)
 
@@ -100,7 +92,7 @@ class ParallelLines(Scene):
 class CurvedLines(ThreeDScene):
     def construct(self):
 
-        sphere = Sphere(radius = 2)
+        sphere = Sphere(radius = 2, color=BLUE_B, fill_opacity=0.3, stroke_opacity=0.8)
         self.set_camera_orientation(phi = 70 * DEGREES , theta= 0 * DEGREES)
 
         self.play(Create(sphere), run_time = 2)
@@ -283,9 +275,8 @@ class CurvedLines(ThreeDScene):
         step1 = MathTex(r"\phi = \text{Colatitude (angle from North Pole)}", color=WHITE)
         step2 = MathTex(r"\sin\phi = \frac{\text{Opposite}}{\text{Hypotenuse}} = \frac{r}{R}", color=YELLOW)
         step3 = MathTex(r"r = R \sin\phi", color=GOLD)
-        step4 = MathTex(r"\text{(If } \theta \text{ is latitude from Equator: } r = R \cos\theta\text{)}", color=GRAY)
 
-        derivation_box = VGroup(step1, step2, step3, step4).arrange(DOWN, aligned_edge=LEFT, buff=0.2).scale(0.65)
+        derivation_box = VGroup(step1, step2, step3).arrange(DOWN, aligned_edge=LEFT, buff=0.2).scale(0.65)
         derivation_box.move_to([-2.0, -1.8, 0])
 
         bg_card = Rectangle(
